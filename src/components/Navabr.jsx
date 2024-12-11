@@ -12,8 +12,8 @@ import { MdOutlineLightMode } from "react-icons/md";
 import { BsBell } from "react-icons/bs";
 import { Link, useLocation } from "react-router-dom";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
-import BasicTooltip from "./ToolTip";
-import ToolTip from "./ToolTip";
+import BasicTooltip from "./ui/ToolTip";
+import ToolTip from "./ui/ToolTip";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 
@@ -47,7 +47,7 @@ export default function Navbar() {
   return (
     <Disclosure as="nav" className="bg-[#eeeeee]">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
+        <div className="relative flex h-20 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* Mobile menu button*/}
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 focus:outline-none">
@@ -64,11 +64,11 @@ export default function Navbar() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center sm:block hidden">
+            <div className="flex shrink-0 items-center">
               <img
                 alt="Translate"
-                src=""
-                className="h-8 w-auto"
+                src="../../Logo.png"
+                className="h-8 w-auto mr-10"
               />
             </div>
             <div className="hidden sm:ml-6 sm:block">
@@ -82,7 +82,7 @@ export default function Navbar() {
                       item.current
                         ? "bg-gray-900 text-white"
                         : "hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-2 py-1 text-sm font-medium"
+                      "rounded-md px-2 py-2 text-sm font-medium"
                     )}
                   >
                     {item.name}
@@ -103,7 +103,7 @@ export default function Navbar() {
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <Stack direction="row">
                     <Avatar
-                     sx={{ width: 28, height: 28 }}
+                     sx={{ width: 35, height: 35 }}
                     alt="Amol Mahor" src="https://st3.depositphotos.com/19428878/36451/v/450/depositphotos_364516198-stock-illustration-businessman-icon-image-male-avatar.jpg" />
                   </Stack>
                 </MenuButton>
@@ -114,9 +114,8 @@ export default function Navbar() {
               >
                 {
                   ProfileMunuItems.map((userProfileItem, index) => (
-                    <MenuItem>
+                    <MenuItem key={index}>
                       <Link
-                        key={index}
                         to={userProfileItem.href}
                         className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                       >
