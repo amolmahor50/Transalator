@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const TranslateContextData = createContext();
 
@@ -8,6 +8,12 @@ export const TranslateProvider = ({ children }) => {
     const [sourceLanguage, setSourceLanguage] = useState('en'); // Target language for translation (e.g., 'en' for English)
     const [targetLanguage, setTargetLanguage] = useState('mr'); // Target language for translation (e.g., 'hi' for English)
 
+    console.log("text",sourceText, translatedText);
+    console.log("selectedLanguages",sourceLanguage, targetLanguage)
+
+    useEffect(() => {
+
+    }, [sourceLanguage, targetLanguage, sourceText, translatedText])
 
     // when i clicked the arrow icon then selected language changed
     const handleExchangeLangArrow = () => {
