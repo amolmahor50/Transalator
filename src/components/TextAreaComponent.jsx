@@ -2,7 +2,7 @@ import ToolTip from "./ui/ToolTip";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { HiOutlineSpeakerWave } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
-import { PiPencilSimple } from "react-icons/pi";
+import { CiKeyboard } from "react-icons/ci";
 import { FaRegCopy } from "react-icons/fa6";
 import { PiShareNetwork } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
@@ -23,11 +23,11 @@ export function TextAreaGrid() {
         <>
             <div className="max-w-7xl grid gap-3 sm:grid-cols-12 items-center">
 
-                <div className="sm:col-span-6 relative border-2 rounded-lg p-4">
+                <div className="sm:col-span-6 relative border-2 rounded-lg sm:p-4 p-2">
 
-                    <span className="absolute right-3 top-2">
+                    <span className="absolute right-2 sm:right-3 top-0 sm:top-2">
                         <ToolTip TitleToolTip={"Clear source Text"}>
-                            <IoMdClose size={20} />
+                            <IoMdClose className="sm:text-xl text-lg" />
                         </ToolTip>
                     </span>
 
@@ -38,36 +38,36 @@ export function TextAreaGrid() {
                         placeholder="Type something..."
                     />
 
-                    <Link className="ml-2 mb-2 text-blue-400 text-sm italic">
+                    <Link className="ml-1 mb-2 text-blue-500 text-xs sm:text-sm italic">
                         Dictionary
                     </Link>
 
                     <div className="flex justify-between">
                         <span>
                             <ToolTip TitleToolTip={"Translate by voice"}>
-                                <MdOutlineKeyboardVoice size={20} />
+                                <MdOutlineKeyboardVoice className="sm:text-xl text-lg" />
                             </ToolTip>
 
                             <ToolTip TitleToolTip={"Listen"}>
-                                <HiOutlineSpeakerWave size={20} />
+                                <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
 
                         <span className="flex items-center gap-2">
                             <span className="text-xs text-gray-600">0 / 5,000</span>
-                            <ToolTip TitleToolTip={"Edit"}>
-                                <PiPencilSimple size={20} />
+                            <ToolTip TitleToolTip={"Keyboard"}>
+                                <CiKeyboard className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
                     </div>
 
                 </div>
 
-                <div className="sm:col-span-6 relative bg-[#eeee] rounded-lg p-4">
+                <div className="sm:col-span-6 relative bg-[#eeee] rounded-lg p-2 sm:p-4">
 
-                    <span className="absolute right-3 top-2">
+                    <span className="absolute sm:right-3 right-1 top-0 sm:top-2">
                         <ToolTip TitleToolTip={"Save Translation"}>
-                            <FaRegStar size={20} />
+                            <FaRegStar className="sm:text-xl text-lg" />
                         </ToolTip>
                     </span>
 
@@ -79,28 +79,28 @@ export function TextAreaGrid() {
                         placeholder="Translation"
                     />
 
-                    <Link className="ml-2 mb-2 text-blue-400 text-sm italic">
+                    <Link className="ml-1 mb-2 text-blue-500 text-xs sm:text-sm italic">
                         Dictionary
                     </Link>
 
                     <div className="flex justify-between">
                         <span>
                             <ToolTip TitleToolTip={"Listen"}>
-                                <HiOutlineSpeakerWave size={20} />
+                                <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
 
                         <span>
                             <ToolTip TitleToolTip={"Copy translation"}>
-                                <FaRegCopy size={20} />
+                                <FaRegCopy className="sm:text-xl text-lg" />
                             </ToolTip>
 
                             <ToolTip TitleToolTip={"Rate this translation"}>
-                                <AiOutlineLike size={20} />
+                                <AiOutlineLike className="sm:text-xl text-lg" />
                             </ToolTip>
 
                             <ToolTip TitleToolTip={"Share translation"}>
-                                <PiShareNetwork size={20} />
+                                <PiShareNetwork className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
                     </div>
