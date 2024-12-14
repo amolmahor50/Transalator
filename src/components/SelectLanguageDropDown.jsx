@@ -22,8 +22,8 @@ export function SelectLanguageDropDown() {
     const [targetTabIndex, setTargetTabIndex] = useState(0);
 
     // Languages for source and target tabs (These should be based on your requirements)
-    const sourceTabLanguages = ["mr", "hi", "en"]; // Marathi, Hindi, English
-    const targetTabLanguages = ["fr", "en", "mr"]; // French, English, Marathi
+    const sourceTabLanguages = ["en", "hi", "mr"]; // Marathi, Hindi, English
+    const targetTabLanguages = ["mr", "en", "fr"]; // French, English, Marathi
 
     // Function to handle source language change in the dropdown
     const handleSourceLanguageChange = (value) => {
