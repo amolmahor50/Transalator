@@ -12,9 +12,9 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-6">
         <Routes>
           <Route path="/" element={<Text />} />
-          <Route path="/imageTranslate" element={<ImageTranslate />} />
-          <Route path="/documentTranslate" element={<DocumentTranslate />} />
-          <Route path="/websiteTranslate" element={<WebsiteTranslate />} />
+          <Route path="/images" element={<ImageTranslate />} />
+          <Route path="/docs" element={<DocumentTranslate />} />
+          <Route path="/websites" element={<WebsiteTranslate />} />
         </Routes>
       </div>
     </>
