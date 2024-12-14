@@ -8,7 +8,7 @@ import { PiShareNetwork } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FeedBackLink } from "./ui/FeedBackLink"
+import { FeedBackLink } from "./FeedBackLink"
 import { useContext } from "react";
 import { TranslateContextData } from "../context/TranslateContext";
 
@@ -19,6 +19,7 @@ export function TextAreaGrid() {
         sourceText,
         setSourceText,
         translatedText,
+        handleSpeakerText
     } = useContext(TranslateContextData);
 
     const handleTextareaResize = (e) => {
@@ -91,12 +92,14 @@ export function TextAreaGrid() {
                                 sourceText.length != 0 ?
                                     <span>
                                         <ToolTip TitleToolTip={"Listen"}>
-                                            <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
+                                            <HiOutlineSpeakerWave
+                                                onClick={() => handleSpeakerText("sourceText")}
+                                                className="sm:text-xl text-lg" />
                                         </ToolTip>
 
                                         <ToolTip TitleToolTip={"Copy translation"}>
                                             <FaRegCopy className="text-lg"
-                                             onClick={(e) => handleCopyText(e.target, "sourceText")} />
+                                                onClick={(e) => handleCopyText(e.target, "sourceText")} />
                                         </ToolTip>
                                     </span> : ""
                             }
@@ -144,14 +147,16 @@ export function TextAreaGrid() {
                             <div className="flex justify-between">
                                 <span>
                                     <ToolTip TitleToolTip={"Listen"}>
-                                        <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
+                                        <HiOutlineSpeakerWave
+                                            onClick={() => handleSpeakerText("translatedText")}
+                                            className="sm:text-xl text-lg" />
                                     </ToolTip>
                                 </span>
 
                                 <span>
                                     <ToolTip TitleToolTip={"Copy translation"}>
                                         <FaRegCopy className="sm:text-xl text-lg"
-                                         onClick={(e) => handleCopyText(e.target, "trasnalteText")} />
+                                            onClick={(e) => handleCopyText(e.target, "trasnalteText")} />
                                     </ToolTip>
 
                                     <ToolTip TitleToolTip={"Rate this translation"}>
