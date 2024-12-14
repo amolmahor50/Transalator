@@ -5,13 +5,10 @@ export const TranslateContextData = createContext();
 export const TranslateProvider = ({ children }) => {
     const [sourceText, setSourceText] = useState('');
     const [translatedText, setTranslatedText] = useState('');
-    const [sourceLanguage, setSourceLanguage] = useState('mr'); // Source language (e.g., 'mr' for Marathi)
-    const [targetLanguage, setTargetLanguage] = useState('fr'); // Target language (e.g., 'fr' for French)
+    const [sourceLanguage, setSourceLanguage] = useState('en'); // Source language (e.g., 'mr' for Marathi)
+    const [targetLanguage, setTargetLanguage] = useState('mr'); // Target language (e.g., 'fr' for French)
 
     const [debounceTimer, setDebounceTimer] = useState(null);
-
-    console.log("text", sourceText, translatedText);
-    console.log("selectedLanguages", sourceLanguage, targetLanguage);
 
     // Function to handle the exchange of languages when the arrow is clicked
     const handleExchangeLangArrow = () => {
@@ -22,6 +19,25 @@ export const TranslateProvider = ({ children }) => {
         let tempLang = sourceLanguage;
         setSourceLanguage(targetLanguage);
         setTargetLanguage(tempLang);
+    }
+
+    // voice speech handler fromTextArea and toTextArea
+    const utterText = (text, languages) => {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterText.lang = languages;
+        synth.speak(utterance);
+        showAlert("Speak speech your paragraph...!", "Success");
+        titleShow("Speak Speech On");
+    }
+
+    const handleSpeakerText = (id) => {
+        if (id == "sourceText") {
+            utterText(sourceText, sourceLanguage);
+        }
+        else if (id == "translatedText") {
+            utterText(translatedText, targetLanguage);
+        }
     }
 
     // handling API and changing the languages with debouncing
@@ -53,13 +69,13 @@ export const TranslateProvider = ({ children }) => {
 
         // Clean up the timer when the component unmounts or dependencies change
         return () => clearTimeout(debounceTimer);
-    }, [sourceText, sourceLanguage, targetLanguage]); // dependencies include sourceText to trigger on text change
+    }, [sourceText, translatedText, sourceLanguage, targetLanguage]); // dependencies include sourceText to trigger on text change
 
     return (
         <TranslateContextData.Provider value={{
             sourceText, setSourceText, translatedText, setTranslatedText, // text related
             sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage, // language related
-            handleExchangeLangArrow, // language exchange function
+            handleExchangeLangArrow, handleSpeakerText // language exchange function
         }}>
             {children}
         </TranslateContextData.Provider>
