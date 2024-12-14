@@ -18,17 +18,17 @@ export function TranslateActionButton() {
         },
         {
             type: "Images",
-            href: "/image",
+            href: "/imageTranslate",
             icon: <PiImageSquareFill />,
         },
         {
             type: "Documents",
-            href: "/document",
+            href: "/documentTranslate",
             icon: <IoMdDocument />,
         },
         {
             type: "Websites",
-            href: "/website",
+            href: "/websiteTranslate",
             icon: <CgWebsite />,
         }
     ]
