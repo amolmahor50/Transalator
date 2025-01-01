@@ -1,7 +1,6 @@
 import { Box, Grid2, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-// Data for Grid Section 1
 const GridSectionData1 = [
   {
     title: "Translate with your camera",
@@ -20,7 +19,6 @@ const GridSectionData1 = [
   },
 ]
 
-// Data for Grid Section 2
 const GridSectionData2 = [
   {
     title: "Translate speech simultaneously",
@@ -39,7 +37,6 @@ const GridSectionData2 = [
   },
 ]
 
-// Data for Grid Section 3
 const GridSectionData3 = {
   content: [
     {
@@ -63,7 +60,6 @@ const GridSectionData3 = {
   ]
 };
 
-// Data for App QR Scan Section
 const AppQRScanData = [
   {
     name: "Android",
@@ -77,17 +73,17 @@ const AppQRScanData = [
   }
 ]
 
+
+
 function About() {
-  // State to track the active index for images and descriptions
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // UseEffect to change active index every 7 seconds to simulate a carousel effect
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % GridSectionData1.length);
     }, 7000);
 
-    return () => clearInterval(interval); // Cleanup when the component is unmounted
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
@@ -97,8 +93,6 @@ function About() {
         <h1 className="scroll-m-20 text-4xl sm:text-6xl font-medium tracking-tight text-start sm:text-center mx-auto w-full sm:max-w-4xl">
           Understand your world and communicate across languages
         </h1>
-        
-        {/* Grid for app download links */}
         <Grid2 container spacing={2} justifyContent="center">
           <Grid2 item>
             <img
@@ -120,7 +114,6 @@ function About() {
           </Grid2>
         </Grid2>
 
-        {/* Banner image */}
         <Stack className="my-12">
           <img
             src="https://www.gstatic.com/marketing-cms/c8/7d/6c232851452cb68120f7c83ba445/banner.webp"
@@ -128,6 +121,7 @@ function About() {
             alt="App Store"
           />
         </Stack>
+
       </Box>
 
       {/* Main Content Section */}
@@ -136,7 +130,7 @@ function About() {
           Connect with people, places, and cultures without language barriers
         </h1>
 
-        {/* Grid Section 1 - Images and descriptions */}
+        {/* Grid Section 1 */}
         <Grid2
           container
           spacing={4}
@@ -146,28 +140,28 @@ function About() {
         >
           <Grid2 item xs={12} sm={6} order={{ xs: 1, sm: 1 }}>
             <Stack spacing={4}>
-              {/* Loop through the data to display titles and descriptions */}
-              {GridSectionData1.map((item, index) => (
-                <Stack spacing={1} key={index}
-                  className={`border-l-2 pl-4 ${activeIndex === index ? "border-light-blue-600" : "border-gray-300"
-                    }`}
-                  style={{
-                    transition: activeIndex === index ? "border-color 2s ease, filter 2s ease" : "border-color 2s ease",
-                    filter: activeIndex === index ? "blur(0px)" : "blur(2px)",
-                  }}
-                >
-                  <Typography variant="h6">
-                    {item.title}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {item.description}
-                  </Typography>
-                </Stack>
-              ))}
+              {
+                GridSectionData1.map((item, index) => (
+                  <Stack spacing={1} key={index}
+                    className={`border-l-2 pl-4 ${activeIndex === index ? "border-light-blue-600" : "border-gray-300"
+                      }`}
+                    style={{
+                      transition: activeIndex === index ? "border-color 2s ease, filter 2s ease" : "border-color 2s ease",
+                      filter: activeIndex === index ? "blur(0px)" : "blur(2px)",
+                    }}
+                  >
+                    <Typography variant="h6">
+                      {item.title}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {item.description}
+                    </Typography>
+                  </Stack>
+                ))
+              }
             </Stack>
           </Grid2>
 
-          {/* Displaying image for the active index */}
           <Grid2 item xs={12} sm={6} order={{ xs: 2, sm: 2 }}>
             <img
               width={450}
@@ -179,7 +173,7 @@ function About() {
           </Grid2>
         </Grid2>
 
-        {/* Grid Section 2 - Another set of images and descriptions */}
+        {/* Grid Section 2 */}
         <Grid2
           container
           spacing={4}
@@ -199,81 +193,125 @@ function About() {
 
           <Grid2 item xs={12} sm={6} order={{ xs: 1, sm: 2 }}>
             <Stack spacing={4}>
-              {GridSectionData2.map((item, index) => (
-                <Stack spacing={1} key={index}
-                  className={`border-l-2 pl-4 ${activeIndex === index ? "border-light-blue-600" : "border-gray-300"
-                    }`}
-                  style={{
-                    transition: activeIndex === index ? "border-color 2s ease, filter 2s ease" : "border-color 2s ease",
-                    filter: activeIndex === index ? "blur(0px)" : "blur(2px)",
-                  }}>
-                  <Typography variant="h6">
-                    {item.title}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {item.description}
-                  </Typography>
-                </Stack>
-              ))}
+              {
+                GridSectionData2.map((item, index) => (
+                  <Stack spacing={1} key={index}
+                    className={`border-l-2 pl-4 ${activeIndex === index ? "border-light-blue-600" : "border-gray-300"
+                      }`}
+                    style={{
+                      transition: activeIndex === index ? "border-color 2s ease, filter 2s ease" : "border-color 2s ease",
+                      filter: activeIndex === index ? "blur(0px)" : "blur(2px)",
+                    }}>
+                    <Typography variant="h6">
+                      {item.title}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {item.description}
+                    </Typography>
+                  </Stack>
+                ))
+              }
             </Stack>
           </Grid2>
         </Grid2>
       </Box>
 
-      {/* Grid Section 3 - Content with links */}
+      {/* Grid Section 3 */}
       <Box className='sm:py-16 sm:mt-32'>
         <Stack direction="row" className="flex justify-between items-center max-w-xl mx-auto text-center">
-          {GridSectionData3?.links?.map((link, index) => (
-            <span key={index}
-              className={`border-b border-transparent hover:border-light-blue-500 cursor-pointer`}>
-              {link}
-            </span>
-          ))}
+          {
+            GridSectionData3?.links?.map((link, index) => (
+              <span key={index}
+                className={`border-b-2 pb-2 text-sm sm:text-xl ${activeIndex === index ? "border-light-blue-600 text-blue-800" : "text-gray-800"
+                  }`}
+              >
+                {link}
+              </span>
+            ))
+          }
         </Stack>
 
-        <Grid2 container spacing={4} justifyContent="center" className="mt-8">
-          <Grid2 item sm={4} xs={12}>
-            <img
-              src={GridSectionData3.content[0].image}
-              alt="Saved"
-              className="max-w-full rounded-md"
-            />
-            <Typography variant="h5" className="mt-4">
-              {GridSectionData3.content[0].title}
-            </Typography>
-            <Typography color="textSecondary">
-              {GridSectionData3.content[0].description}
-            </Typography>
-          </Grid2>
+        <Box className="flex justify-center my-16">
+          {
+            GridSectionData3?.content?.map((item, index) => (
+              // Conditional rendering to check if the index matches the activeIndex
+              index === activeIndex && (
+                <Grid2 key={index} container spacing={6} alignItems="center">
+                  <Grid2 item xs={12} sm={2} width={300}>
+                    <Stack spacing={1}>
+                      <Typography variant="h5" align="start">
+                        {item.title}
+                      </Typography>
+                      <Typography color="textSecondary" align="start">
+                        {item.description}
+                      </Typography>
+                    </Stack>
+                  </Grid2>
 
-          <Grid2 item sm={4} xs={12}>
-            <img
-              src={GridSectionData3.content[1].image}
-              alt="Document Translation"
-              className="max-w-full rounded-md"
-            />
-            <Typography variant="h5" className="mt-4">
-              {GridSectionData3.content[1].title}
-            </Typography>
-            <Typography color="textSecondary">
-              {GridSectionData3.content[1].description}
-            </Typography>
-          </Grid2>
+                  <Grid2 item xs={12} sm={10}>
+                    <Stack alignItems="center" justifyContent="center" textAlign="center">
+                      <img
+                        width={600}
+                        height={600}
+                        src={item.image}
+                        alt={`Slide ${index}`}
+                        className="max-w-full rounded-md"
+                      />
+                    </Stack>
+                  </Grid2>
+                </Grid2>
+              )
+            ))
+          }
+        </Box>
+      </Box>
 
-          <Grid2 item sm={4} xs={12}>
-            <img
-              src={GridSectionData3.content[2].image}
-              alt="Translate Websites"
-              className="max-w-full rounded-md"
-            />
-            <Typography variant="h5" className="mt-4">
-              {GridSectionData3.content[2].title}
-            </Typography>
-            <Typography color="textSecondary">
-              {GridSectionData3.content[2].description}
-            </Typography>
-          </Grid2>
-        </Grid2>
+      {/* Grid Section 4 */}
+      <Box className="flex justify-center items-center sm:py-6 flex-col gap-6 text-center">
+        <Stack>
+          <img
+            src="./Logo.png"
+            className="h-12 w-12"
+            alt="logo" />
+        </Stack>
+
+        <Stack spacing={2}>
+          <h1 className="scroll-m-20 sm:text-5xl text-3xl font-medium tracking-tight">
+            Try This Translate
+          </h1>
+
+          <Typography className="sm:max-w-xl mx-auto" color="textSecondary">
+            Start using Google Translate in your <span className="text-indigo-500 cursor-pointer">browser</span>. Or scan the QR code below to download the app to use it on your mobile device.
+          </Typography>
+
+        </Stack>
+
+        <Box className="flex sm:flex-row flex-col gap-16">
+
+          {
+            AppQRScanData.map((item, index) => (
+              <Box key={index} className='flex flex-col gap-2 justify-center items-center mt-6'>
+                <h2 className="scroll-m-20 text-xl font-medium tracking-tight transition-colors first:mt-0">
+                  {item.name}
+                </h2>
+                <img
+                  className="w-[130px] h-[130px]"
+                  src={item.src}
+                  alt={item.name}
+                />
+
+                <img
+                  className="w-[160px] h-[50px]"
+                  src={item.whichQR}
+                  alt={item.name}
+                />
+
+              </Box>
+            ))
+          }
+
+        </Box>
+
       </Box>
     </div>
   );
