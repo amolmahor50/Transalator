@@ -4,6 +4,7 @@ import ImageTranslate from "./routes/ImageTranslate";
 import DocumentTranslate from "./routes/DocumentTranslate";
 import WebsiteTranslate from "./routes/WebsiteTranslate";
 import Text from "./routes/Text";
+import About from "./routes/About";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-6">
         <Routes>
           <Route path="/" element={<Text />} />
+          <Route path="/about" element={<About/>} />
           <Route path="/images" element={<ImageTranslate />} />
           <Route path="/docs" element={<DocumentTranslate />} />
           <Route path="/websites" element={<WebsiteTranslate />} />
