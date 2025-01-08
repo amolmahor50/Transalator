@@ -10,7 +10,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Stack direction="row" className='flex justify-between items-center h-16 border-b px-6'>
+    <Stack direction="row" className='flex justify-between items-center w-full bg-white border-b h-16 px-6 fixed top-0 z-50'>
 
       <Stack direction="row" className='flex items-center gap-2'>
         {
