@@ -5,9 +5,12 @@ import { IoMenuSharp } from "react-icons/io5";
 import ToolTip from './ui/ToolTip';
 import { useState } from 'react';
 import SidebarDrawer from './ui/sidebar';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+
+  const Navigate = useNavigate();
 
   return (
     <Stack direction="row" className='flex justify-between items-center w-full bg-white border-b h-16 px-6 fixed top-0 z-50'>
@@ -19,7 +22,7 @@ function Navbar() {
         <ToolTip TitleToolTip="Main menu" size="26" onClick={() => setOpen(true)} >
           <IoMenuSharp />
         </ToolTip>
-        <Box className="flex items-center gap-0 cursor-pointer">
+        <Box className="flex items-center gap-0 cursor-pointer" onClick={() => Navigate("/")}>
           <img className='h-18 w-24 hidden sm:flex' src='https://storage.googleapis.com/gweb-uniblog-publish-prod/images/logo_Google_FullColor_3x_830x27.max-600x600.format-webp.webp' />
           <span className='text-gray-800 text-xl font-normal border-b-2'>
             Translate
