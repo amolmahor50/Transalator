@@ -2,19 +2,22 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { TranslateContextData } from '../../context/TranslateContext';
 
 export const GoogleTranslateLogo = () => {
-  return (
-    <Box className="flex items-center gap-0 cursor-pointer">
-      <img className='h-18 w-24' src='https://storage.googleapis.com/gweb-uniblog-publish-prod/images/logo_Google_FullColor_3x_830x27.max-600x600.format-webp.webp' />
-      <span className='text-gray-800 text-xl font-normal border-b-2'>
-        Translate
-      </span>
-    </Box>
-  )
+    return (
+        <Box className="flex items-center gap-0 cursor-pointer">
+            <img className='h-18 w-24' src='https://storage.googleapis.com/gweb-uniblog-publish-prod/images/logo_Google_FullColor_3x_830x27.max-600x600.format-webp.webp' />
+            <span className='text-gray-800 text-xl font-normal border-b-2'>
+                Translate
+            </span>
+        </Box>
+    )
 }
 
 export default function SidebarDrawer({ open, setOpen }) {
+    const { setOpenSlider } = useContext(TranslateContextData)
     const navigate = useNavigate();
 
     const toggleDrawer = (newOpen) => () => {
@@ -36,11 +39,18 @@ export default function SidebarDrawer({ open, setOpen }) {
                     About Google Translate
                 </Typography>
                 <Stack direction="column" gap={4} marginTop={3}>
-                    {['Privacy and Terms', 'Help', 'Send feedback', 'About Google'].map((text, index) => (
-                        <Typography key={index} variant='body2' className='cursor-pointer'>
-                            {text}
-                        </Typography>
-                    ))}
+                    <Typography variant='body2' className='cursor-pointer'>
+                        Privacy and Terms
+                    </Typography>
+                    <Typography variant='body2' className='cursor-pointer'>
+                        Help
+                    </Typography>
+                    <Typography variant='body2' className='cursor-pointer' onClick={() => setOpenSlider(true)}>
+                        Send feedback
+                    </Typography>
+                    <Typography variant='body2' className='cursor-pointer'>
+                        About Google
+                    </Typography>
                 </Stack>
             </Stack>
         </Box>
