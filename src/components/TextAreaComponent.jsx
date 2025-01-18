@@ -14,7 +14,6 @@ import ManageDataHistory from "./ui/DataHistory";
 import { toast } from "sonner";
 import { Rating } from "@mui/material";
 
-
 export function TextAreaGrid() {
 
     const {
@@ -33,10 +32,6 @@ export function TextAreaGrid() {
     // handle clear all text in your textarea
     const handleCloseButtonClickeRemoveText = () => {
         setSourceText("");
-
-    }
-
-    const handleSaved = () => {
 
     }
 
@@ -70,7 +65,7 @@ export function TextAreaGrid() {
                     {
                         sourceText.length != 0 ? <span className="absolute right-2 sm:right-3 top-0 sm:top-2"
                             onClick={handleCloseButtonClickeRemoveText}>
-                            <ToolTip TitleToolTip={"Clear source Text"}>
+                            <ToolTip TitleToolTip="Clear source Text">
                                 <IoMdClose className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span> : ""
@@ -94,22 +89,19 @@ export function TextAreaGrid() {
 
                     <div className="flex justify-between">
                         <span>
-                            <ToolTip TitleToolTip={"Translate by voice"}>
+                            <ToolTip TitleToolTip="Translate by voice">
                                 <MdOutlineKeyboardVoice className="sm:text-xl text-lg" />
                             </ToolTip>
 
                             {
                                 sourceText.length != 0 ?
                                     <span>
-                                        <ToolTip TitleToolTip={"Listen"}>
-                                            <HiOutlineSpeakerWave
-                                                onClick={() => handleSpeakerText("sourceText")}
-                                                className="sm:text-xl text-lg" />
+                                        <ToolTip TitleToolTip="Listen" onClick={() => handleSpeakerText("sourceText")}>
+                                            <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                                         </ToolTip>
 
-                                        <ToolTip TitleToolTip={"Copy translation"}>
-                                            <FaRegCopy className="text-lg"
-                                                onClick={(e) => handleCopyText(e.target, "sourceText")} />
+                                        <ToolTip TitleToolTip="Copy translation" onClick={(e) => handleCopyText(e.target, "sourceText")}>
+                                            <FaRegCopy className="text-lg" />
                                         </ToolTip>
                                     </span> : ""
                             }
@@ -117,7 +109,7 @@ export function TextAreaGrid() {
 
                         <span className="flex items-center gap-2">
                             <span className="text-xs text-gray-600">{sourceText.length} / 5,000</span>
-                            <ToolTip TitleToolTip={"Keyboard"}>
+                            <ToolTip TitleToolTip="Keyboard">
                                 <CiKeyboard className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
@@ -156,24 +148,21 @@ export function TextAreaGrid() {
                         sourceText.length != 0 ?
                             <div className="flex justify-between">
                                 <span>
-                                    <ToolTip TitleToolTip={"Listen"}>
-                                        <HiOutlineSpeakerWave
-                                            onClick={() => handleSpeakerText("translatedText")}
-                                            className="sm:text-xl text-lg" />
+                                    <ToolTip TitleToolTip="Listen" onClick={() => handleSpeakerText("translatedText")}>
+                                        <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                                     </ToolTip>
                                 </span>
 
                                 <span>
-                                    <ToolTip TitleToolTip={"Copy translation"}>
-                                        <FaRegCopy className="sm:text-xl text-lg"
-                                            onClick={(e) => handleCopyText(e.target, "trasnalteText")} />
+                                    <ToolTip TitleToolTip="Copy translation" onClick={(e) => handleCopyText(e.target, "trasnalteText")} >
+                                        <FaRegCopy className="sm:text-xl text-lg" />
                                     </ToolTip>
 
-                                    <ToolTip TitleToolTip={"Rate this translation"}>
+                                    <ToolTip TitleToolTip="Rate this translation">
                                         <AiOutlineLike className="sm:text-xl text-lg" />
                                     </ToolTip>
 
-                                    <ToolTip TitleToolTip={"Share translation"}>
+                                    <ToolTip TitleToolTip="Share translation">
                                         <PiShareNetwork className="sm:text-xl text-lg" />
                                     </ToolTip>
                                 </span>

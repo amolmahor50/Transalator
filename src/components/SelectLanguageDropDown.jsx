@@ -99,11 +99,8 @@ export function SelectLanguageDropDown() {
 
             {/* Language Transform Arrow */}
             <div>
-                <ToolTip TitleToolTip={"Left Right Convert Language"}>
-                    <TbArrowsLeftRight
-                        className="w-5 h-5 cursor-pointer"
-                        onClick={swapLanguages} // Handle swap on icon click
-                    />
+                <ToolTip TitleToolTip="Left Right Convert Language" onClick={swapLanguages}>
+                    <TbArrowsLeftRight className="w-5 h-5 cursor-pointer" />
                 </ToolTip>
             </div>
 

@@ -81,8 +81,8 @@ function DocumentUpload() {
                     </Typography>
                   </div>
                 </div>
-                <ToolTip TitleToolTip="Clear file">
-                  <IoCloseOutline onClick={() => setUploadedDocument(null)} />
+                <ToolTip TitleToolTip="Clear file" onClick={() => setUploadedDocument(null)} >
+                  <IoCloseOutline />
                 </ToolTip>
               </Box>
 

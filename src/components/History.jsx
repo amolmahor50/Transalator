@@ -1,5 +1,4 @@
 import { Box, Button, Rating, Stack, Typography } from "@mui/material";
-import { IoIosStarOutline } from "react-icons/io";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import ToolTip from "./ui/ToolTip"
 import { useContext } from "react";

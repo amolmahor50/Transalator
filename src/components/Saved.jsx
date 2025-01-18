@@ -71,8 +71,8 @@ export function SavedData() {
                                 :
                                 <Stack direction='row' className="flex justify-between items-center border-b-2 pb-2">
                                     <div>
-                                        <ToolTip TitleToolTip='Search saved translation'>
-                                            <MdOutlineSearch size={22} onClick={() => setSearchPopUp(true)} />
+                                        <ToolTip TitleToolTip='Search saved translation' onClick={() => setSearchPopUp(true)} >
+                                            <MdOutlineSearch size={22} />
                                         </ToolTip>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -125,14 +125,14 @@ export function SavedData() {
                                         <Stack direction="column">
                                             <Typography variant="caption" className="flex gap-2 items-center">
                                                 {type.sourceText}
-                                                <ToolTip TitleToolTip="Listen">
-                                                    <HiOutlineSpeakerWave size={12} onClick={() => handleSpeaker("sourceText", type.sourceText)} />
+                                                <ToolTip TitleToolTip="Listen" onClick={() => handleSpeaker("sourceText", type.sourceText)}>
+                                                    <HiOutlineSpeakerWave size={12} />
                                                 </ToolTip>
                                             </Typography>
                                             <Typography variant="caption" className="flex gap-2 items-center">
                                                 {type.translateText}
-                                                <ToolTip TitleToolTip="Listen">
-                                                    <HiOutlineSpeakerWave size={12} onClick={() => handleSpeaker("translatedText", type.translateText)} />
+                                                <ToolTip TitleToolTip="Listen" onClick={() => handleSpeaker("translatedText", type.translateText)}>
+                                                    <HiOutlineSpeakerWave size={12} />
                                                 </ToolTip>
                                             </Typography>
                                         </Stack>

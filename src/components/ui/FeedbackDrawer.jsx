@@ -42,11 +42,7 @@ export default function FeedbackSidebar() {
                     Send feedback to Google
                 </Typography>
 
-                <ToolTip
-                    TitleToolTip="Close"
-                    size={"25"}
-                    onClick={() => setOpenSlider(false)}
-                >
+                <ToolTip TitleToolTip="Close" onClick={() => setOpenSlider(false)} >
                     <IoClose />
                 </ToolTip>
             </Stack>

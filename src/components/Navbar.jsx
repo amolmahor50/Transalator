@@ -19,7 +19,7 @@ function Navbar() {
         {
           open ? <SidebarDrawer open={open} setOpen={setOpen} /> : ""
         }
-        <ToolTip TitleToolTip="Main menu" size="26" onClick={() => setOpen(true)} >
+        <ToolTip TitleToolTip="Main menu" onClick={() => setOpen(true)} >
           <IoMenuSharp />
         </ToolTip>
         <Box className="flex items-center gap-0 cursor-pointer" onClick={() => Navigate("/")}>
@@ -31,13 +31,13 @@ function Navbar() {
       </Stack>
 
       <Stack direction="row" className='flex items-center gap-2'>
-        <ToolTip TitleToolTip="Setting" size="22">
+        <ToolTip TitleToolTip="Setting">
           <IoSettingsOutline />
         </ToolTip>
-        <ToolTip TitleToolTip="Google apps" size="22">
+        <ToolTip TitleToolTip="Google apps">
           <IoApps />
         </ToolTip>
-        <ToolTip TitleToolTip="Google Account" size="20">
+        <ToolTip TitleToolTip="Google Account">
           <Avatar alt="Remy Sharp" src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg" />
         </ToolTip>
       </Stack>
