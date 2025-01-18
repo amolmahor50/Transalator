@@ -6,11 +6,13 @@ import { CiKeyboard } from "react-icons/ci";
 import { FaRegCopy } from "react-icons/fa6";
 import { PiShareNetwork } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
-import { FaRegStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FeedBackLink } from "./FeedBackLink"
 import { useContext } from "react";
 import { TranslateContextData } from "../context/TranslateContext";
+import ManageDataHistory from "./ui/DataHistory";
+import { toast } from "sonner";
+import { Rating } from "@mui/material";
 
 
 export function TextAreaGrid() {
@@ -31,13 +33,21 @@ export function TextAreaGrid() {
     // handle clear all text in your textarea
     const handleCloseButtonClickeRemoveText = () => {
         setSourceText("");
+
+    }
+
+    const handleSaved = () => {
+
     }
 
     // from textarea and to textarea inside text copy handler
     const copyContent = (text) => {
         navigator.clipboard.writeText(text);
-        showAlert("Copy to Text...!");
-        titleShow("Copy Text");
+        toast("Copied Text", {
+            action: {
+                label: "Close"
+            }
+        })
     }
 
     const handleCopyText = (target, id) => {
@@ -120,8 +130,8 @@ export function TextAreaGrid() {
                     {
                         sourceText.length != 0 ?
                             <span className="absolute sm:right-3 right-1 top-0 sm:top-2">
-                                <ToolTip TitleToolTip={"Save Translation"}>
-                                    <FaRegStar className="sm:text-xl text-lg" />
+                                <ToolTip TitleToolTip="Save Translation">
+                                    <Rating name="customized-1" defaultValue={0} max={1} />
                                 </ToolTip>
                             </span> : ""
                     }
@@ -174,6 +184,7 @@ export function TextAreaGrid() {
                 </div>
             </div>
             <FeedBackLink />
+            <ManageDataHistory />
         </>
 
     )

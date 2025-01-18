@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { fetchDataForHistory, fetchDataForSaved } from "./data";
 
 export const TranslateContextData = createContext();
 
@@ -8,6 +9,9 @@ export const TranslateProvider = ({ children }) => {
     const [sourceLanguage, setSourceLanguage] = useState('en'); // Source language (e.g., 'mr' for Marathi)
     const [targetLanguage, setTargetLanguage] = useState('mr'); // Target language (e.g., 'fr' for French)
     const [openSlider, setOpenSlider] = useState(false);
+    const [AllSavedData, setAllSavedData] = useState(fetchDataForSaved);
+    const [AllHistoryData, setAllHistoryData] = useState(fetchDataForHistory)
+
 
     const [debounceTimer, setDebounceTimer] = useState(null);
 
@@ -28,8 +32,6 @@ export const TranslateProvider = ({ children }) => {
         const utterance = new SpeechSynthesisUtterance(text);
         utterText.lang = languages;
         synth.speak(utterance);
-        showAlert("Speak speech your paragraph...!", "Success");
-        titleShow("Speak Speech On");
     }
 
     const handleSpeakerText = (id) => {
@@ -77,7 +79,7 @@ export const TranslateProvider = ({ children }) => {
             sourceText, setSourceText, translatedText, setTranslatedText, // text related
             sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage, // language related
             handleExchangeLangArrow, handleSpeakerText,// language exchange function
-            openSlider, setOpenSlider
+            openSlider, setOpenSlider, AllSavedData, AllHistoryData
         }}>
             {children}
         </TranslateContextData.Provider>
