@@ -87,7 +87,7 @@ function About() {
   }, []);
 
   return (
-    <div className="py-12">
+    <div className="py-12 mt-20 relative">
       {/* Header Section */}
       <Box className="flex justify-center flex-col gap-8 items-center">
         <h1 className="scroll-m-20 text-4xl sm:text-6xl font-medium tracking-tight text-start sm:text-center mx-auto w-full sm:max-w-4xl">
@@ -310,6 +310,16 @@ function About() {
             ))
           }
 
+        </Box>
+
+        <Box className="absolute bottom-0 right-3/4">
+
+          <img 
+          width={130}
+          height={130}
+          src="https://www.gstatic.com/marketing-cms/dd/cd/8735ef1d4a24ad4829311bad4bcd/bg-image2.webp" 
+          alt="animated"
+           />
         </Box>
 
       </Box>
