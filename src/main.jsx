@@ -10,6 +10,7 @@ import WebsiteTranslate from "./routes/WebsiteTranslate.jsx";
 import DocumentTranslate from "./routes/DocumentTranslate.jsx";
 import { TextAreaGrid } from "./components/TextAreaComponent.jsx";
 import { TranslateActionButton } from "./components/TranslateActionButtons.jsx";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -52,5 +53,6 @@ createRoot(document.getElementById("root")).render(
     <TranslateProvider>
       <RouterProvider router={router} />
     </TranslateProvider>
+    <Toaster />
   </StrictMode>
 );

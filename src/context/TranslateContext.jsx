@@ -7,6 +7,7 @@ export const TranslateProvider = ({ children }) => {
     const [translatedText, setTranslatedText] = useState('');
     const [sourceLanguage, setSourceLanguage] = useState('en'); // Source language (e.g., 'mr' for Marathi)
     const [targetLanguage, setTargetLanguage] = useState('mr'); // Target language (e.g., 'fr' for French)
+    const [openSlider, setOpenSlider] = useState(false);
 
     const [debounceTimer, setDebounceTimer] = useState(null);
 
@@ -75,7 +76,8 @@ export const TranslateProvider = ({ children }) => {
         <TranslateContextData.Provider value={{
             sourceText, setSourceText, translatedText, setTranslatedText, // text related
             sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage, // language related
-            handleExchangeLangArrow, handleSpeakerText // language exchange function
+            handleExchangeLangArrow, handleSpeakerText,// language exchange function
+            openSlider, setOpenSlider
         }}>
             {children}
         </TranslateContextData.Provider>
