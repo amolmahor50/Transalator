@@ -1,6 +1,5 @@
 import React from 'react'
 import Container from '../components/ui/Container'
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { GrLinkNext } from "react-icons/gr";
 import ToolTip from '../components/ui/ToolTip';
@@ -16,19 +15,19 @@ function Website() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="website" className="ml-2 text-blue-800">Website</Label>
-          <Input type="website" id="website" className="border-blue-800 border-2" placeholder="Website" />
+          <input type="website" id="website" className="border-blue-800 border-2" placeholder="Website" />
         </div>
 
         <Stack className='bg-blue-800 text-sm hover:bg-blue-600 mt-4 ml-6 text-white rounded-full'>
           <ToolTip TitleToolTip="Translate" >
-            <GrLinkNext color='white'  className='text-lg'/>
+            <GrLinkNext color='white' className='text-lg' />
           </ToolTip>
         </Stack>
 
       </Container>
 
-      <FeedBackLink/>
-      <ManageDataHistory/>
+      <FeedBackLink />
+      <ManageDataHistory />
     </>
   )
 }
