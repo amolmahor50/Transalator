@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Container from "../components/ui/Container";
 import { FeedBackLink } from "../components/FeedBackLink";
@@ -9,12 +9,14 @@ import { Box, Typography } from "@mui/material";
 import { FaFile } from "react-icons/fa";
 import { IoCloseOutline } from "react-icons/io5";
 import ToolTip from "../components/ui/ToolTip";
-import LoadingButton from '@mui/lab/LoadingButton';
+// import LoadingButton from '@mui/lab/LoadingButton';
 import { SaveIcon } from "lucide-react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { IoOpenOutline } from "react-icons/io5";
+import { TranslateContextData } from "../context/TranslateContext";
 
 function DocumentUpload() {
+  const { sourceLanguage, targetLanguage } = useContext(TranslateContextData)
   const [uploadedDocument, setUploadedDocument] = useState(null); // Stores the selected or dropped document
   const [uploadError, setUploadError] = useState(""); // For handling errors
 
@@ -88,6 +90,21 @@ function DocumentUpload() {
                 <Button variant="blue">
                   Translate
                 </Button>
+
+                {/* <div className="flex sm:flex-row flex-col gap-4">
+                  <Button variant="outline"
+                    className='px-3 text-blue-800'
+                  >
+                    <AiOutlineDownload />
+                    Download translation
+                  </Button>
+
+                  <Button variant="blue">
+                    <IoOpenOutline />
+                    Open translation
+                  </Button>
+                </div> */}
+
               </Box>
 
             </div>

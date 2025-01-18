@@ -1,19 +1,56 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/index.css";
-import App from "./App.jsx";
-import { ThemeProvider } from "@material-tailwind/react";
-import { BrowserRouter } from "react-router-dom";
 import { TranslateProvider } from "./context/TranslateContext.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from "./App.jsx";
+import About from "./routes/About.jsx";
+import ImageTranslate from "./routes/ImageTranslate.jsx";
+import WebsiteTranslate from "./routes/WebsiteTranslate.jsx";
+import DocumentTranslate from "./routes/DocumentTranslate.jsx";
+import { TextAreaGrid } from "./components/TextAreaComponent.jsx";
+import { TranslateActionButton } from "./components/TranslateActionButtons.jsx";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <TranslateActionButton />,
+        children: [
+          {
+            path: "/",
+            element: <TextAreaGrid />
+          },
+          {
+            path: '/images',
+            element: <ImageTranslate />
+          },
+          {
+            path: '/docs',
+            element: <DocumentTranslate />
+          },
+          {
+            path: '/websites',
+            element: <WebsiteTranslate />
+          },
+        ]
+      },
+      {
+        path: "/about",
+        element: <About />
+      },
+    ]
+  }
+
+])
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <TranslateProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
+      <RouterProvider router={router} />
     </TranslateProvider>
   </StrictMode>
 );
