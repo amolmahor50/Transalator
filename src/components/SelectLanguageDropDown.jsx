@@ -62,7 +62,7 @@ export function SelectLanguageDropDown() {
     };
 
     return (
-        <div className="flex justify-between items-center w-full mt-6 sm:px-4 px-6 sm:mb-0 mb-2">
+        <div className="flex justify-between items-center max-w-7xl mx-auto mt-6 sm:px-0 px-6 sm:mb-0 mb-2">
 
             <div className="flex justify-evenly items-center w-auto sm:w-1/2">
 
@@ -94,7 +94,7 @@ export function SelectLanguageDropDown() {
                         </SelectContent>
                     </Select>
                 </div>
-                
+
             </div>
 
             {/* Language Transform Arrow */}
