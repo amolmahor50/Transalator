@@ -4,13 +4,15 @@ import { fetchDataForHistory, fetchDataForSaved } from "./data";
 export const TranslateContextData = createContext();
 
 export const TranslateProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [sourceText, setSourceText] = useState('');
     const [translatedText, setTranslatedText] = useState('');
     const [sourceLanguage, setSourceLanguage] = useState('en'); // Source language (e.g., 'mr' for Marathi)
     const [targetLanguage, setTargetLanguage] = useState('mr'); // Target language (e.g., 'fr' for French)
     const [openSlider, setOpenSlider] = useState(false);
     const [AllSavedData, setAllSavedData] = useState(fetchDataForSaved);
-    const [AllHistoryData, setAllHistoryData] = useState(fetchDataForHistory)
+    const [AllHistoryData, setAllHistoryData] = useState(fetchDataForHistory);
 
 
     const [debounceTimer, setDebounceTimer] = useState(null);
@@ -76,6 +78,7 @@ export const TranslateProvider = ({ children }) => {
 
     return (
         <TranslateContextData.Provider value={{
+            user, setUser, loading, setLoading,
             sourceText, setSourceText, translatedText, setTranslatedText, // text related
             sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage, // language related
             handleExchangeLangArrow, handleSpeakerText,// language exchange function

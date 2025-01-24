@@ -1,16 +1,36 @@
-import { Avatar, Box, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Stack } from '@mui/material'
 import { IoApps } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMenuSharp } from "react-icons/io5";
 import ToolTip from './ui/ToolTip';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SidebarDrawer from './ui/sidebar';
 import { useNavigate } from 'react-router-dom';
+import { LogOut, User, } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { logout } from './Authentication/auth';
+import { TranslateContextData } from '../context/TranslateContext';
 
 function Navbar() {
   const [open, setOpen] = useState(false);
-
+  const { setUser, user } = useContext(TranslateContextData);
   const Navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    setUser(null);
+    Navigate("/")
+  };
 
   return (
     <Stack direction="row" className='flex justify-between items-center w-full bg-white border-b h-16 px-6 fixed top-0 z-50'>
@@ -37,11 +57,33 @@ function Navbar() {
         <ToolTip TitleToolTip="Google apps">
           <IoApps />
         </ToolTip>
-        <ToolTip TitleToolTip="Google Account">
-          <Avatar alt="Remy Sharp" src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg" />
-        </ToolTip>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size={10} className="border-none outline-none focus:outline-none rounded-full">
+              <ToolTip TitleToolTip="Google Account">
+                <Avatar alt="Remy Sharp" src={user.photo} />
+              </ToolTip>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="sm:w-56 w-48 mr-4">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <User />
+                <span>Profile</span>
+                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut />
+              <span>Log out</span>
+              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </Stack>
-
     </Stack>
   )
 }
