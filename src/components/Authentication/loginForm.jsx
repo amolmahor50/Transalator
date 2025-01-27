@@ -10,13 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RiFacebookFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
-import { getUser, loginWithFacebook, loginWithGoogle } from "./auth";
-import { useContext } from "react";
+import { getUser, loginWithEmail, loginWithFacebook, loginWithGoogle } from "./auth";
+import { useContext, useState } from "react";
 import { TranslateContextData } from "../../context/TranslateContext";
 import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const { setUser } = useContext(TranslateContextData);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("")
   const Navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
@@ -27,6 +29,13 @@ function LoginForm() {
 
   const handleFacebookLogin = async () => {
     await loginWithFacebook();
+    setUser(getUser());
+    Navigate("/translator");
+  }
+
+  const handleEmailWithLogin = async (e) => {
+    e.preventDefault();
+    await loginWithEmail(email, password);
     setUser(getUser());
     Navigate("/translator");
   }
@@ -42,7 +51,7 @@ function LoginForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleEmailWithLogin}>
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
                   <Button variant="outline" className="w-full" onClick={handleFacebookLogin}>
@@ -63,9 +72,10 @@ function LoginForm() {
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
-                      id="email"
                       type="email"
-                      placeholder="m@example.com"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -79,7 +89,12 @@ function LoginForm() {
                         Forgot your password?
                       </a>
                     </div>
-                    <Input id="password" type="password" placeholder="Password" required />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required />
                   </div>
                   <Button type="submit" className="w-full">
                     Login

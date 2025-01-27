@@ -17,20 +17,23 @@ import { getUser } from "./components/Authentication/auth.jsx";
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, setLoading, setUser, loading } = useContext(TranslateContextData);
-  const Navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Load user from localStorage on component mount
-    const savedUser = getUser();
-    setUser(savedUser);
+    const savedUser = getUser(); // Load user from localStorage
+    if (savedUser) {
+      setUser(savedUser);
+    } else {
+      navigate("/"); // Redirect to login page if no user
+    }
     setLoading(false);
-  }, []);
+  }, [setUser, setLoading, navigate]);
 
   if (loading) {
-    return <Loader />
+    return <Loader />;
   }
 
-  return getUser !== null ? children : <Navigate to="/" />;
+  return user ? children : null; // Only render children if user exists
 };
 
 const router = createBrowserRouter([

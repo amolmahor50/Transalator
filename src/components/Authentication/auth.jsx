@@ -1,5 +1,5 @@
 import { auth, googleProvider, facebookProvider } from "../../lib/firebaseConfig";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { toast } from "sonner";
 
@@ -56,6 +56,34 @@ export const loginWithFacebook = async () => {
     } catch (error) {
         console.error("Error during Facebook login:", error.message);
         toast("Login failed! Please try again.", {
+            action: {
+                label: "Close"
+            }
+        })
+    }
+};
+
+// login with email and password
+export const loginWithEmail = async (email, password) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save user details in localStorage
+        localStorage.setItem("user", JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+        }));
+
+        toast("Logged out successfully!", {
+            action: {
+                label: "Close"
+            }
+        })
+    } catch (error) {
+        console.error("Error during login:", error.message);
+        toast("Logout failed! Please try again.", {
             action: {
                 label: "Close"
             }
