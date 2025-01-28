@@ -13,7 +13,7 @@ import { RiGoogleFill } from "react-icons/ri";
 import { getUser, loginWithEmail, loginWithFacebook, loginWithGoogle } from "./auth";
 import { useContext, useState } from "react";
 import { TranslateContextData } from "../../context/TranslateContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const { setUser } = useContext(TranslateContextData);
@@ -52,8 +52,8 @@ function LoginForm() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailWithLogin}>
-              <div className="grid gap-6">
-                <div className="flex flex-col gap-4">
+              <div className="grid gap-4">
+                <div className="flex flex-col gap-2">
                   <Button variant="outline" className="w-full" onClick={handleFacebookLogin}>
                     <RiFacebookFill />
                     Login with Facebook
@@ -82,12 +82,12 @@ function LoginForm() {
                   <div className="grid gap-2">
                     <div className="flex items-center">
                       <Label htmlFor="password">Password</Label>
-                      <a
-                        href="#"
+                      <Link
+                        to="/forgot-pass"
                         className="ml-auto text-sm underline-offset-4 hover:underline"
                       >
                         Forgot your password?
-                      </a>
+                      </Link>
                     </div>
                     <Input
                       type="password"
@@ -96,15 +96,15 @@ function LoginForm() {
                       onChange={(e) => setPassword(e.target.value)}
                       required />
                   </div>
-                  <Button type="submit" className="w-full">
+                  <Button variant="blue" type="submit" className="w-full">
                     Login
                   </Button>
                 </div>
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <a href="#" className="underline underline-offset-4">
+                  <Link to="/sign-up" className="underline underline-offset-4">
                     Sign up
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>
