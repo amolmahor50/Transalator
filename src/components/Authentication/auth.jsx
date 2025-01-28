@@ -1,5 +1,5 @@
 import { auth, googleProvider, facebookProvider } from "../../lib/firebaseConfig";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, getAuth, confirmPasswordReset } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { toast } from "sonner";
 
@@ -27,7 +27,7 @@ export const loginWithGoogle = async () => {
         })
     } catch (error) {
         console.error("Error during login:", error.message);
-        toast("Login failed! Please try again.", {
+        toast("Please Put Your correct info.", {
             action: {
                 label: "Close"
             }
@@ -55,7 +55,7 @@ export const loginWithFacebook = async () => {
         })
     } catch (error) {
         console.error("Error during Facebook login:", error.message);
-        toast("Login failed! Please try again.", {
+        toast("Please Put Your correct info.", {
             action: {
                 label: "Close"
             }
@@ -83,7 +83,7 @@ export const loginWithEmail = async (email, password) => {
         })
     } catch (error) {
         console.error("Error during login:", error.message);
-        toast("Logout failed! Please try again.", {
+        toast("Please Put Your correct Password and Gmail.", {
             action: {
                 label: "Close"
             }
@@ -112,3 +112,40 @@ export const logout = async () => {
         })
     }
 };
+
+// sendPasswordResetEmail
+export const sendVerificationOTP = async (auth, email) => {
+    try {
+        await sendPasswordResetEmail(auth, email);
+        toast("OTP sent to your email. Please check your inbox.", {
+            action: {
+                label: "Close"
+            }
+        })
+    } catch (error) {
+        console.error("Error sending email:", error.message);
+        toast(error.message, {
+            action: {
+                label: "Close"
+            }
+        })
+    }
+};
+
+export const confirmPassReset = async (auth, oobCode, newPassword) => {
+    try {
+        await confirmPasswordReset(auth, oobCode, newPassword);
+        toast("Password reset successful! You can now log in.", {
+            action: {
+                label: "Close"
+            }
+        })
+    } catch (error) {
+        console.error("Error resetting password:", error.message);
+        toast(error.message, {
+            action: {
+                label: "Close"
+            }
+        })
+    }
+}
