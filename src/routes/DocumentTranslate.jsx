@@ -14,6 +14,7 @@ import { SaveIcon } from "lucide-react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { IoOpenOutline } from "react-icons/io5";
 import { TranslateContextData } from "../context/TranslateContext";
+import { Link } from "react-router-dom";
 
 function DocumentUpload() {
   const { sourceLanguage, targetLanguage } = useContext(TranslateContextData)
@@ -138,6 +139,12 @@ function DocumentUpload() {
                   />
                 </label>
               </Button>
+
+              {/* Footer Info */}
+              <p className="text-xs mt-6 text-gray-600">
+                Supported file types: .docx, .pdf, .pptx, .xlsx.
+                <Link to='/' className='text-blue-600 ml-2 font-semibold'>Learn more</Link>
+              </p>
 
               {/* Error Message */}
               {uploadError && (
