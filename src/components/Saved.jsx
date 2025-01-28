@@ -1,11 +1,11 @@
-import { Box, Button, Rating, Stack, Typography } from "@mui/material";
+import { Box, Rating, Stack, Typography } from "@mui/material";
 import { MdOutlineSearch } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { BiSolidSpreadsheet } from "react-icons/bi";
 import { FaCaretDown } from "react-icons/fa";
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
-import { PiDotsThreeVerticalBold } from "react-icons/pi";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import ToolTip from "./ui/ToolTip";
 import { HiOutlineSpeakerWave } from "react-icons/hi2";
 import {
@@ -14,9 +14,11 @@ import {
     DropdownMenuContent,
     DropdownMenuRadioItem,
     DropdownMenuTrigger,
+    DropdownMenuItem
 } from "@/components/ui/dropdown-menu"
 import { useContext, useState } from "react";
 import { TranslateContextData } from "../context/TranslateContext";
+import { Button } from "@/components/ui/button"
 
 export function SavedData() {
     const [sortStatus, setSortStatus] = useState('sort by date');
@@ -32,6 +34,8 @@ export function SavedData() {
         setSourceText(textType);
         handleSpeakerText(type);
     }
+
+    console.log("allSavedData-", AllSavedData);
 
     return (
         <>
@@ -90,12 +94,30 @@ export function SavedData() {
                                                 </DropdownMenuRadioGroup>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-                                        <ToolTip TitleToolTip='Search saved translation'>
-                                            <BiSolidSpreadsheet size={22} />
-                                        </ToolTip>
-                                        <ToolTip TitleToolTip="More Option">
-                                            <PiDotsThreeVerticalBold size={22} />
-                                        </ToolTip>
+
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <ToolTip TitleToolTip='Search saved translation'>
+                                                    <BiSolidSpreadsheet size={22} />
+                                                </ToolTip>
+                                            </DropdownMenuTrigger>
+                                        </DropdownMenu>
+
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline" size={24} className="border-none rounded-full">
+                                                    <ToolTip TitleToolTip="More Option">
+                                                        <BsThreeDotsVertical size={24} />
+                                                    </ToolTip>
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-fit p-3 mr-4">
+                                                <DropdownMenuItem className="p-3">
+                                                    <span>Clear All saved</span>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+
                                     </div>
                                 </Stack>
                             }
@@ -111,7 +133,7 @@ export function SavedData() {
                             </Stack>
                             {
                                 AllSavedData.map((type) => (
-                                    <Stack key={type.id} direction="column" className="cursor-pointer rounded-lg hover:bg-accent p-2 flex flex-col">
+                                    <Stack key={type.id} direction="column" className="cursor-pointer rounded-lg hover:bg-accent p-2 flex flex-col mb-2 border">
                                         <Stack direction="row" className="flex justify-between items-center">
                                             <Typography variant="body2" className="border rounded-full px-2">
                                                 {type.sourceLang} - {type.targetLang}

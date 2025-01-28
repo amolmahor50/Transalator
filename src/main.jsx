@@ -19,7 +19,6 @@ import CreateAccount from "./components/Authentication/CreateAccount.jsx";
 
 // LoginHandler Component
 const LoginHandler = ({ children }) => {
-  const { setLoading, loading } = useContext(TranslateContextData);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,12 +26,8 @@ const LoginHandler = ({ children }) => {
     if (savedUser) {
       navigate("/translator"); // Redirect if user exists
     }
-    setLoading(false);
   }, [navigate]);
 
-  if (loading) {
-    return <Loader />; // Show loader while checking user
-  }
   return children; // Render login page only if no redirect occurs
 };
 
@@ -49,7 +44,7 @@ const ProtectedRoute = ({ children }) => {
       navigate("/"); // Redirect to login if no user
     }
     setLoading(false);
-  }, [user, setLoading, navigate]);
+  }, [setUser, setLoading, navigate]);
 
   if (loading) {
     return <Loader />; // Show loader while checking user

@@ -7,7 +7,10 @@ export function FeedBackLink() {
 
     return (
         <>
-            <span className='flex justify-end items-end mt-2 mr-4 text-xs cursor-pointer text-blue-600 italic' onClick={() => setOpenSlider(true)}>
+            <span
+                className="inline-block text-xs text-blue-600 italic cursor-pointer absolute right-8 sm:right-40 p-1"
+                onClick={() => setOpenSlider(true)}
+            >
                 Send Feedback
             </span>
             {

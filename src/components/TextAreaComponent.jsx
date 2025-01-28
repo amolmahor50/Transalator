@@ -58,9 +58,9 @@ export function TextAreaGrid() {
 
     return (
         <>
-            <div className="max-w-7xl grid gap-3 sm:grid-cols-12 items-center">
+            <div className="max-w-7xl grid gap-3 sm:grid-cols-2 grid-cols-1 items-center">
 
-                <div className="sm:col-span-6 relative border-2 rounded-lg sm:p-4 p-2">
+                <div className="relative border-2 rounded-lg sm:p-4 p-2">
 
                     {
                         sourceText.length != 0 ? <span className="absolute right-2 sm:right-3 top-0 sm:top-2"
@@ -82,7 +82,7 @@ export function TextAreaGrid() {
 
                     {
                         sourceText.length != 0 ?
-                            <Link className="ml-1 mb-2 text-blue-500 text-xs sm:text-sm italic">
+                            <Link className="ml-1 text-blue-500 text-xs sm:text-sm italic">
                                 Dictionary
                             </Link> : ""
                     }
@@ -117,7 +117,7 @@ export function TextAreaGrid() {
 
                 </div>
 
-                <div className="sm:col-span-6 relative bg-[#eeee] rounded-lg p-2 sm:p-4">
+                <div className="relative bg-[#eeee] rounded-lg p-2 sm:p-4">
 
                     {
                         sourceText.length != 0 ?

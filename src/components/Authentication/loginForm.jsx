@@ -96,7 +96,12 @@ function LoginForm() {
                       onChange={(e) => setPassword(e.target.value)}
                       required />
                   </div>
-                  <Button variant="blue" type="submit" className="w-full">
+                  <Button
+                    variant="blue"
+                    type="submit"
+                    className="w-full"
+                    disabled={email === "" || password === ""}
+                  >
                     Login
                   </Button>
                 </div>

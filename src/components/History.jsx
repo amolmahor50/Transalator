@@ -1,8 +1,15 @@
-import { Box, Button, Rating, Stack, Typography } from "@mui/material";
-import { PiDotsThreeVerticalBold } from "react-icons/pi";
+import { Box, Rating, Stack, Typography } from "@mui/material";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import ToolTip from "./ui/ToolTip"
 import { useContext } from "react";
 import { TranslateContextData } from "../context/TranslateContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 export function HistoryData() {
 
@@ -42,10 +49,10 @@ export function HistoryData() {
               Clear all history
             </Typography>
 
-            <Box className="mt-6">
+            <Box className="mt-6 flex flex-col gap-2">
               {
                 AllHistoryData?.map((type) => (
-                  <Stack key={type.id} className="cursor-pointer rounded-lg hover:bg-accent p-2 flex flex-col">
+                  <Stack key={type.id} className="cursor-pointer rounded-lg hover:bg-accent p-2 flex flex-col border">
                     <Stack direction="row" className="flex justify-between items-center">
                       <Typography variant="body2" className="border rounded-full px-2">
                         {type.sourceLang} - {type.targetLang}
@@ -54,9 +61,20 @@ export function HistoryData() {
                         <ToolTip TitleToolTip="Save Translation">
                           <Rating name="customized-1" defaultValue={0} max={1} />
                         </ToolTip>
-                        <ToolTip TitleToolTip="More Option">
-                          <PiDotsThreeVerticalBold size={20} />
-                        </ToolTip>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size={24} className="border-none rounded-full">
+                              <ToolTip TitleToolTip="More Option">
+                                <BsThreeDotsVertical size={24} />
+                              </ToolTip>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-fit p-2 mr-6">
+                            <DropdownMenuItem>
+                              <span>Remove from history</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </Stack>
                     <Stack direction="column">
