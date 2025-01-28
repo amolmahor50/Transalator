@@ -114,10 +114,10 @@ export const logout = async () => {
 };
 
 // sendPasswordResetEmail
-export const sendVerificationOTP = async (auth, email) => {
+export const sendVerificationLink = async (auth, email) => {
     try {
         await sendPasswordResetEmail(auth, email);
-        toast("OTP sent to your email. Please check your inbox.", {
+        toast("Check your email and reset password. Please check your inbox.", {
             action: {
                 label: "Close"
             }
@@ -131,21 +131,3 @@ export const sendVerificationOTP = async (auth, email) => {
         })
     }
 };
-
-export const confirmPassReset = async (auth, oobCode, newPassword) => {
-    try {
-        await confirmPasswordReset(auth, oobCode, newPassword);
-        toast("Password reset successful! You can now log in.", {
-            action: {
-                label: "Close"
-            }
-        })
-    } catch (error) {
-        console.error("Error resetting password:", error.message);
-        toast(error.message, {
-            action: {
-                label: "Close"
-            }
-        })
-    }
-}
