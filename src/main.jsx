@@ -17,6 +17,20 @@ import { getUser } from "./components/Authentication/auth.jsx";
 import ForgotForm from "./components/Authentication/forgotForm.jsx";
 import CreateAccount from "./components/Authentication/CreateAccount.jsx";
 
+// LoginHandler Component
+const LoginHandler = ({ children }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = getUser();
+    if (savedUser) {
+      navigate("/translator"); // Redirect if user exists
+    }
+  }, [navigate]);
+
+  return children; // Render login page only if no redirect occurs
+};
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, setLoading, setUser, loading } = useContext(TranslateContextData);
@@ -25,72 +39,67 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const savedUser = getUser(); // Load user from localStorage
     if (savedUser) {
-      setUser(savedUser);
+      setUser(savedUser); // Set the user in context
     } else {
-      navigate("/"); // Redirect to login page if no user
+      navigate("/"); // Redirect to login if no user
     }
     setLoading(false);
-  }, [setUser, setLoading, navigate]);
+  }, [user, setLoading, navigate]);
 
   if (loading) {
-    return <Loader />;
+    return <Loader />; // Show loader while checking user
   }
 
-  return user ? children : null; // Only render children if user exists
+  return user ? children : null; // Render children if user exists
 };
 
+// Router Setup
 const router = createBrowserRouter([
   {
     path: "",
-    element: <LoginForm />, // Login page for the root
+    element: (
+      <LoginHandler>
+        <LoginForm />
+      </LoginHandler>
+    ),
   },
   {
-    path: '/sign-up',
-    element: <CreateAccount />
+    path: "/sign-up",
+    element: <CreateAccount />,
   },
   {
-    path: '/forgot-pass',
-    element: <ForgotForm />
+    path: "/forgot-pass",
+    element: <ForgotForm />,
   },
   {
     path: "/translator",
-    element: <ProtectedRoute>
-      <App />
-    </ProtectedRoute>, // Main app layout
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     children: [
       {
-        path: "", // Default child route for `/translator`
+        path: "",
         element: <TranslateActionButton />,
         children: [
-          {
-            path: "",
-            element: <TextAreaGrid />
-          },
-          {
-            path: "images", // Relative path under `/translator`
-            element: <ImageTranslate />,
-          },
-          {
-            path: "docs", // Relative path under `/translator`
-            element: <DocumentTranslate />,
-          },
-          {
-            path: "websites", // Relative path under `/translator`
-            element: <WebsiteTranslate />,
-          },
-        ]
+          { path: "", element: <TextAreaGrid /> },
+          { path: "images", element: <ImageTranslate /> },
+          { path: "docs", element: <DocumentTranslate /> },
+          { path: "websites", element: <WebsiteTranslate /> },
+        ],
       },
     ],
   },
   {
     path: "/about",
-    element: <ProtectedRoute>
-      <About />
-    </ProtectedRoute>,
-  }
+    element: (
+      <ProtectedRoute>
+        <About />
+      </ProtectedRoute>
+    ),
+  },
 ]);
-
-
 
 // Render App
 createRoot(document.getElementById("root")).render(
@@ -101,4 +110,3 @@ createRoot(document.getElementById("root")).render(
     <Toaster />
   </StrictMode>
 );
-
