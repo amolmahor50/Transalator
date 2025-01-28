@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { MdTranslate } from "react-icons/md";
 import { PiImageSquareFill } from "react-icons/pi";
 import { IoMdDocument } from "react-icons/io";
@@ -14,22 +14,22 @@ export function TranslateActionButton() {
     const TranslateTypeButton = [
         {
             type: "Text",
-            href: "/",
+            href: "",
             icon: <MdTranslate />,
         },
         {
             type: "Images",
-            href: "/images",
+            href: "images",
             icon: <PiImageSquareFill />,
         },
         {
             type: "Documents",
-            href: "/docs",
+            href: "docs",
             icon: <IoMdDocument />,
         },
         {
             type: "Websites",
-            href: "/websites",
+            href: "websites",
             icon: <CgWebsite />,
         }
     ]

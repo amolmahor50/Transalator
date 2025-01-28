@@ -10,9 +10,12 @@ import WebsiteTranslate from "./routes/WebsiteTranslate.jsx";
 import DocumentTranslate from "./routes/DocumentTranslate.jsx";
 import { TranslateActionButton } from "./components/TranslateActionButtons.jsx";
 import { Toaster } from "sonner";
+import { TextAreaGrid } from './components/TextAreaComponent.jsx';
 import LoginForm from "./components/Authentication/loginForm.jsx";
 import Loader from "./components/ui/Loader.jsx";
 import { getUser } from "./components/Authentication/auth.jsx";
+import ForgotForm from "./components/Authentication/forgotForm.jsx";
+import CreateAccount from "./components/Authentication/CreateAccount.jsx";
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -38,8 +41,16 @@ const ProtectedRoute = ({ children }) => {
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "",
     element: <LoginForm />, // Login page for the root
+  },
+  {
+    path: '/sign-up',
+    element: <CreateAccount />
+  },
+  {
+    path: '/forgot-pass',
+    element: <ForgotForm />
   },
   {
     path: "/translator",
@@ -50,25 +61,33 @@ const router = createBrowserRouter([
       {
         path: "", // Default child route for `/translator`
         element: <TranslateActionButton />,
-      },
-      {
-        path: "images", // Relative path under `/translator`
-        element: <ImageTranslate />,
-      },
-      {
-        path: "docs", // Relative path under `/translator`
-        element: <DocumentTranslate />,
-      },
-      {
-        path: "websites", // Relative path under `/translator`
-        element: <WebsiteTranslate />,
-      },
-      {
-        path: "about", // Relative path under `/translator`
-        element: <About />,
+        children: [
+          {
+            path: "",
+            element: <TextAreaGrid />
+          },
+          {
+            path: "images", // Relative path under `/translator`
+            element: <ImageTranslate />,
+          },
+          {
+            path: "docs", // Relative path under `/translator`
+            element: <DocumentTranslate />,
+          },
+          {
+            path: "websites", // Relative path under `/translator`
+            element: <WebsiteTranslate />,
+          },
+        ]
       },
     ],
   },
+  {
+    path: "/about",
+    element: <ProtectedRoute>
+      <About />
+    </ProtectedRoute>,
+  }
 ]);
 
 
