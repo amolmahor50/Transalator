@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 import { RiFacebookFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import { getUser, loginWithFacebook, loginWithGoogle } from './auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { TranslateContextData } from '../../context/TranslateContext';
@@ -19,7 +19,7 @@ import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase
 import { toast } from 'sonner';
 
 export default function CreateAccount() {
-    const { setUser } = useContext(TranslateContextData);
+    const { setUser } = useContext(TranslateContextData); // Use setUser to update the user in context
     const Navigate = useNavigate();
 
     // State for form inputs
@@ -38,19 +38,39 @@ export default function CreateAccount() {
         setFormData({ ...formData, [name]: value });
     };
 
+    // Handle Google login
     const handleGoogleLogin = async () => {
-        await loginWithGoogle();
-        setUser(getUser());
-        Navigate("/translator");
+        try {
+            await loginWithGoogle();
+            const user = getUser();
+            setUser(user); // Set the user in context after successful login
+            Navigate("/translator");
+        } catch (error) {
+            toast.error("Google login failed!", {
+                action: {
+                    label: "Close",
+                },
+            });
+        }
     }
 
+    // Handle Facebook login
     const handleFacebookLogin = async () => {
-        await loginWithFacebook();
-        setUser(getUser());
-        Navigate("/translator");
+        try {
+            await loginWithFacebook();
+            const user = getUser();
+            setUser(user); // Set the user in context after successful login
+            Navigate("/translator");
+        } catch (error) {
+            toast.error("Facebook login failed!", {
+                action: {
+                    label: "Close",
+                },
+            });
+        }
     }
 
-    // Handle form submission
+    // Handle form submission for creating an account
     const handleCreateAccount = async (e) => {
         e.preventDefault();
         const { name, email, password, confirmPassword } = formData;
@@ -72,18 +92,22 @@ export default function CreateAccount() {
                 displayName: name,
             });
 
-            Navigate("/");
-            toast("Created Account log in now..", {
+            const user = userCredential.user; // Get the user data after account creation
+
+            setUser(user); // Set the user in context
+            Navigate("/"); // Navigate to home after successful account creation
+            toast.success("Created Account. Log in now!", {
                 action: {
-                    label: "Close"
-                }
-            })
+                    label: "Close",
+                },
+            });
+
         } catch (err) {
-            toast("Email Already In used ", {
+            toast.error("Email already in use or some error occurred!", {
                 action: {
-                    label: "Close"
-                }
-            })
+                    label: "Close",
+                },
+            });
         }
     };
 
@@ -169,7 +193,12 @@ export default function CreateAccount() {
                                 </Label>
                             </div>
                             {error && <p className="text-red-500 text-sm w-fit p-2 rounded-sm bg-accent">{error}</p>}
-                            <Button variant="blue" type="submit" className="w-full">
+                            <Button
+                                variant="blue"
+                                type="submit"
+                                className="w-full"
+                                disabled={!formData.name || !formData.email || !formData.password || !formData.confirmPassword}
+                            >
                                 Create Account
                             </Button>
                         </div>
@@ -183,5 +212,5 @@ export default function CreateAccount() {
                 </CardContent>
             </Card>
         </div >
-    )
+    );
 }

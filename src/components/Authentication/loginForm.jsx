@@ -1,44 +1,113 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RiFacebookFill } from "react-icons/ri";
-import { RiGoogleFill } from "react-icons/ri";
-import { getUser, loginWithEmail, loginWithFacebook, loginWithGoogle } from "./auth";
-import { useContext, useState } from "react";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RiFacebookFill, RiGoogleFill } from "react-icons/ri";
+import {
+  getUser,
+  loginWithEmail,
+  loginWithFacebook,
+  loginWithGoogle,
+} from "./auth";
+import { useContext, useEffect, useState } from "react";
 import { TranslateContextData } from "../../context/TranslateContext";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function LoginForm() {
   const { setUser } = useContext(TranslateContextData);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
   const Navigate = useNavigate();
 
+  // Retrieve last email from localStorage (if available)
+  const [email, setEmail] = useState(localStorage.getItem("savedEmail") || "");
+  const [password, setPassword] = useState("");
+
+  // Save email to localStorage (on login)
+  const saveEmailToStorage = (newEmail) => {
+    localStorage.setItem("savedEmail", newEmail);
+  };
+
+  // Handle Google login
   const handleGoogleLogin = async () => {
-    await loginWithGoogle();
-    setUser(getUser());
-    Navigate("/translator");
-  }
+    try {
+      await loginWithGoogle();
+      const user = getUser();
+      if (user) {
+        setUser(user);
+        saveEmailToStorage(user.email);
+        Navigate("/translator");
+      } else {
+        toast.error("Failed to retrieve user after Google login.", {
+          action: {
+            label: "Close",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error(`Google login failed:${error}`, {
+        action: {
+          label: "Close",
+        },
+      });
+    }
+  };
 
+  // Handle Facebook login
   const handleFacebookLogin = async () => {
-    await loginWithFacebook();
-    setUser(getUser());
-    Navigate("/translator");
-  }
+    try {
+      await loginWithFacebook();
+      const user = getUser();
+      if (user) {
+        setUser(user);
+        saveEmailToStorage(user.email);
+        Navigate("/translator");
+      } else {
+        toast.error("Failed to retrieve user after Facebook login.", {
+          action: {
+            label: "Close",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error(`Facebook login failed:${error}`, {
+        action: {
+          label: "Close",
+        },
+      });
+    }
+  };
 
+  // Handle Email and Password login
   const handleEmailWithLogin = async (e) => {
     e.preventDefault();
-    await loginWithEmail(email, password);
-    setUser(getUser());
-    Navigate("/translator");
-  }
+    try {
+      await loginWithEmail(email, password);
+      const user = getUser();
+      if (user) {
+        setUser(user);
+        saveEmailToStorage(email);
+        Navigate("/translator");
+      } else {
+        toast.error("Failed to retrieve user after email login.", {
+          action: {
+            label: "Close",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error(`Email login failed:${error}`, {
+        action: {
+          label: "Close",
+        },
+      });
+    }
+  };
 
   return (
     <div className="max-w-sm mx-auto my-10">
@@ -54,11 +123,19 @@ function LoginForm() {
             <form onSubmit={handleEmailWithLogin}>
               <div className="grid gap-4">
                 <div className="flex flex-col gap-2">
-                  <Button variant="outline" className="w-full" onClick={handleFacebookLogin}>
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center gap-2"
+                    onClick={handleFacebookLogin}
+                  >
                     <RiFacebookFill />
                     Login with Facebook
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center gap-2"
+                    onClick={handleGoogleLogin}
+                  >
                     <RiGoogleFill />
                     Login with Google
                   </Button>
@@ -94,7 +171,8 @@ function LoginForm() {
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      required />
+                      required
+                    />
                   </div>
                   <Button
                     variant="blue"
@@ -115,13 +193,19 @@ function LoginForm() {
             </form>
           </CardContent>
         </Card>
-        <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-          By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-          and <a href="#">Privacy Policy</a>.
+        <div className="text-center text-xs text-muted-foreground">
+          By clicking continue, you agree to our{" "}
+          <a href="#" className="underline">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="underline">
+            Privacy Policy
+          </a>.
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default LoginForm
+export default LoginForm;
