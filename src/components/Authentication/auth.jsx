@@ -1,5 +1,5 @@
 import { auth, googleProvider, facebookProvider } from "../../lib/firebaseConfig";
-import { signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, getAuth, confirmPasswordReset } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { toast } from "sonner";
 
