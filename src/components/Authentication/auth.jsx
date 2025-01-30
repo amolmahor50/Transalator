@@ -73,7 +73,7 @@ export const loginWithEmail = async (email, password) => {
         localStorage.setItem("user", JSON.stringify({
             uid: user.uid,
             email: user.email,
-            displayName: user.displayName,
+            name: user.displayName,
         }));
 
         toast("Logged out successfully!", {

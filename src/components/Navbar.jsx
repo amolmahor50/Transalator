@@ -32,6 +32,8 @@ function Navbar() {
     Navigate("/")
   };
 
+  console.log(user)
+
   return (
     <Stack direction="row" className='flex justify-between items-center w-full bg-white border-b h-16 px-6 fixed top-0 z-50'>
 
@@ -65,21 +67,24 @@ function Navbar() {
               </ToolTip>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="sm:w-56 w-48 mr-4">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent className="w-72 sm:w-80 sm:mr-12 mr-4 sm:p-8 p-4 rounded-lg">
+            <div className='flex gap-4'>
+              <Avatar alt="Remy Sharp" src={user.photo} />
+              <div className='flex flex-col mb-2'>
+                <span className=''>{user.name}</span>
+                <span className='text-gray-600 text-sm'>{user.email}</span>
+              </div>
+            </div>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <User />
                 <span>Profile</span>
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               <span>Log out</span>
-              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
