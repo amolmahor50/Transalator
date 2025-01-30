@@ -1,6 +1,7 @@
 // firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, push, set, get, remove, child } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmLf0YTdGYMGz0TxoucBUgymKj5FgLkeU",
@@ -14,7 +15,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
-export const facebookProvider = new FacebookAuthProvider();
-export default app;
+
+// Initialize services
+const db = getDatabase(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
+export { app, db, auth, ref, push, set, get, remove, child, googleProvider, facebookProvider, onAuthStateChanged };

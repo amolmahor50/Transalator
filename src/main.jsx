@@ -56,7 +56,7 @@ const ProtectedRoute = ({ children }) => {
 // Router Setup
 const router = createBrowserRouter([
   {
-    path: "",
+    path: "/",
     element: (
       <LoginHandler>
         <LoginForm />
