@@ -1,4 +1,4 @@
-import { FeedBackLink } from '../components/FeedBackLink';
+import { FeedBackLink } from '../components/ui/FeedBackLink';
 import Container from '../components/ui/Container';
 import ManageDataHistory from '../components/ui/DataHistory';
 import React, { useState } from "react";
@@ -39,9 +39,8 @@ function ImageUploader() {
         {!selectedImage && (
           <div
             {...getRootProps()}
-            className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center border-2 border-dashed ${
-              isDragActive ? "border-blue-500" : "border-gray-300"
-            } rounded-lg bg-gray-50 hover:cursor-pointer`}
+            className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center border-2 border-dashed ${isDragActive ? "border-blue-500" : "border-gray-300"
+              } rounded-lg bg-gray-50 hover:cursor-pointer`}
           >
             <input {...getInputProps()} />
             <UploadFileIcon fontSize="large" color="primary" />

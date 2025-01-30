@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Container from "../components/ui/Container";
-import { FeedBackLink } from "../components/FeedBackLink";
+import { FeedBackLink } from "../components/ui/FeedBackLink";
 import ManageDataHistory from "../components/ui/DataHistory";
 import UploadFileIcon from "@mui/icons-material/UploadFile"; // Icon for drag-and-drop cloud
 import { Button } from "../components/ui/button";

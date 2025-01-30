@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label"
 import { GrLinkNext } from "react-icons/gr";
 import ToolTip from '../components/ui/ToolTip';
 import { Stack } from '@mui/material';
-import { FeedBackLink } from '../components/FeedBackLink';
+import { FeedBackLink } from '../components/ui/FeedBackLink';
 import ManageDataHistory from '../components/ui/DataHistory';
 import { Input } from "@/components/ui/input"
 
