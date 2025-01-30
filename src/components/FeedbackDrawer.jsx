@@ -31,7 +31,11 @@ export default function FeedbackSidebar() {
         const user = auth.currentUser;
 
         if (!user) {
-            toast.error("User not authenticated");
+            toast.error("User not authenticated", {
+                action: {
+                    label: "Close",
+                },
+            });
             setLoading(false); // Stop loading if user is not authenticated
             return;
         }
@@ -47,11 +51,19 @@ export default function FeedbackSidebar() {
                 timestamp: Date.now(),
             });
 
-            toast.success("Feedback sent successfully!");
+            toast.success("Feedback sent successfully!", {
+                action: {
+                    label: "Close",
+                },
+            });
             setFormData({ feedback: "", emailUpdates: false, approvedScreenshot: null });
             setOpenSlider(false);
         } catch (error) {
-            toast.error("Error submitting feedback. Try again.");
+            toast.error("Error submitting feedback. Try again.", {
+                action: {
+                    label: "Close",
+                },
+            });
         } finally {
             setLoading(false); // Stop loading after completion
         }
@@ -72,7 +84,11 @@ export default function FeedbackSidebar() {
                 drawerElement.style.visibility = "visible"; // Restore visibility
             }
         } catch (error) {
-            console.error("Error capturing screenshot:", error);
+            toast.error(`Error capturing screenshot:${error}`, {
+                action: {
+                    label: "Close",
+                },
+            });
         }
     };
 
