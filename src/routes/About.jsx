@@ -142,7 +142,7 @@ function About() {
             <Grid2 item xs={12} sm={6} order={{ xs: 1, sm: 1 }}>
               <Stack spacing={4}>
                 {
-                  GridSectionData1.map((item, index) => (
+                  GridSectionData1?.map((item, index) => (
                     <Stack spacing={1} key={index}
                       className={`border-l-2 pl-4 ${activeIndex === index ? "border-light-blue-600" : "border-gray-300"
                         }`}
@@ -152,10 +152,10 @@ function About() {
                       }}
                     >
                       <Typography variant="h6">
-                        {item.title}
+                        {item?.title}
                       </Typography>
                       <Typography color="textSecondary">
-                        {item.description}
+                        {item?.description}
                       </Typography>
                     </Stack>
                   ))
@@ -167,7 +167,7 @@ function About() {
               <img
                 width={450}
                 height={600}
-                src={GridSectionData1[activeIndex].image}
+                src={GridSectionData1[activeIndex]?.image}
                 alt={`Slide ${activeIndex}`}
                 className="max-w-full rounded-md"
               />
@@ -186,7 +186,7 @@ function About() {
               <img
                 width={450}
                 height={600}
-                src={GridSectionData2[activeIndex].image}
+                src={GridSectionData2[activeIndex]?.image}
                 alt={`Slide ${activeIndex}`}
                 className="max-w-full rounded-md"
               />
@@ -204,10 +204,10 @@ function About() {
                         filter: activeIndex === index ? "blur(0px)" : "blur(2px)",
                       }}>
                       <Typography variant="h6">
-                        {item.title}
+                        {item?.title}
                       </Typography>
                       <Typography color="textSecondary">
-                        {item.description}
+                        {item?.description}
                       </Typography>
                     </Stack>
                   ))
@@ -241,10 +241,10 @@ function About() {
                     <Grid2 item xs={12} sm={2} width={300}>
                       <Stack spacing={1}>
                         <Typography variant="h5" align="start">
-                          {item.title}
+                          {item?.title}
                         </Typography>
                         <Typography color="textSecondary" align="start">
-                          {item.description}
+                          {item?.description}
                         </Typography>
                       </Stack>
                     </Grid2>
@@ -293,18 +293,18 @@ function About() {
               AppQRScanData.map((item, index) => (
                 <Box key={index} className='flex flex-col gap-2 justify-center items-center mt-6'>
                   <h2 className="scroll-m-20 text-xl font-medium tracking-tight transition-colors first:mt-0">
-                    {item.name}
+                    {item?.name}
                   </h2>
                   <img
                     className="w-[130px] h-[130px]"
-                    src={item.src}
-                    alt={item.name}
+                    src={item?.src}
+                    alt={item?.name}
                   />
 
                   <img
                     className="w-[160px] h-[50px]"
-                    src={item.whichQR}
-                    alt={item.name}
+                    src={item?.whichQR}
+                    alt={item?.name}
                   />
 
                 </Box>
