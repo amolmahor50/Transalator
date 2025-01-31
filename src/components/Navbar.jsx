@@ -13,9 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from './Authentication/auth';
@@ -31,8 +29,6 @@ function Navbar() {
     setUser(null);
     Navigate("/")
   };
-
-  console.log(user)
 
   return (
     <Stack direction="row" className='flex justify-between items-center w-full bg-white border-b h-16 px-6 fixed top-0 z-50'>
@@ -71,13 +67,13 @@ function Navbar() {
             <div className='flex gap-4'>
               <Avatar alt="Remy Sharp" src={user.photo} />
               <div className='flex flex-col mb-2'>
-                <span className=''>{user.name}</span>
+                <span className=''>{user.FullName}</span>
                 <span className='text-gray-600 text-sm'>{user.email}</span>
               </div>
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => Navigate('/profile')}>
                 <User />
                 <span>Profile</span>
               </DropdownMenuItem>

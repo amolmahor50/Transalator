@@ -1,113 +1,157 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
-    CardDescription
+    CardDescription,
 } from "@/components/ui/card";
-import { RiFacebookFill } from "react-icons/ri";
-import { RiGoogleFill } from "react-icons/ri";
+import { RiFacebookFill, RiGoogleFill } from "react-icons/ri";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getUser, loginWithFacebook, loginWithGoogle } from './auth';
-import { Link, useNavigate } from 'react-router-dom';
-import { TranslateContextData } from '../../context/TranslateContext';
-import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth';
-import { toast } from 'sonner';
+import { Link, useNavigate } from "react-router-dom";
+import { TranslateContextData } from "../../context/TranslateContext";
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    updateProfile,
+    signInWithPopup,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+} from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore
+import { toast } from "sonner";
 
 export default function CreateAccount() {
-    const { setUser } = useContext(TranslateContextData); // Use setUser to update the user in context
-    const Navigate = useNavigate();
+    const { setUser } = useContext(TranslateContextData);
+    const navigate = useNavigate();
+    const auth = getAuth();
+    const db = getFirestore(); // Firestore instance
 
     // State for form inputs
     const [formData, setFormData] = useState({
-        name: "",
+        FirstName: "",
+        LastName: "",
         email: "",
         password: "",
         confirmPassword: "",
+        termsAccepted: false, // Initialize termsAccepted to false
     });
 
     const [error, setError] = useState("");
 
     // Handle input change
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === "checkbox" ? checked : value, // Ensure checkbox updates correctly
+        });
+    };
+
+    // Validation function
+    const validateForm = () => {
+        const { FirstName, LastName, email, password, confirmPassword, termsAccepted } = formData;
+
+        if (!FirstName.trim() || !LastName.trim()) {
+            return "First and Last Name are required.";
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return "Invalid email format.";
+        }
+        if (password.length < 6) {
+            return "Password must be at least 6 characters.";
+        }
+        if (password !== confirmPassword) {
+            return "Passwords do not match.";
+        }
+        if (!termsAccepted) {
+            return "You must accept the Terms and Conditions."; // Show error if terms are not accepted
+        }
+        return null;
     };
 
     // Handle Google login
     const handleGoogleLogin = async () => {
         try {
-            await loginWithGoogle();
-            const user = getUser();
-            setUser(user); // Set the user in context after successful login
-            Navigate("/translator");
-        } catch (error) {
-            toast.error("Google login failed!", {
-                action: {
-                    label: "Close",
-                },
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            setUser({
+                uid: user.uid,
+                displayName: user.displayName,
+                email: user.email,
             });
+
+            navigate("/translator");
+            toast.success("Logged in with Google!");
+        } catch (error) {
+            toast.error("Google login failed!");
         }
-    }
+    };
 
     // Handle Facebook login
     const handleFacebookLogin = async () => {
         try {
-            await loginWithFacebook();
-            const user = getUser();
-            setUser(user); // Set the user in context after successful login
-            Navigate("/translator");
-        } catch (error) {
-            toast.error("Facebook login failed!", {
-                action: {
-                    label: "Close",
-                },
-            });
-        }
-    }
+            const provider = new FacebookAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
 
-    // Handle form submission for creating an account
+            setUser({
+                uid: user.uid,
+                displayName: user.displayName,
+                email: user.email,
+            });
+
+            navigate("/translator");
+            toast.success("Logged in with Facebook!");
+        } catch (error) {
+            toast.error("Facebook login failed!");
+        }
+    };
+
+    // Handle form submission
     const handleCreateAccount = async (e) => {
         e.preventDefault();
-        const { name, email, password, confirmPassword } = formData;
-
-        // Validation
-        if (password !== confirmPassword) {
-            setError("Passwords do not match!");
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
+        const { FirstName, LastName, email, password } = formData;
+
         try {
-            const auth = getAuth();
-
-            // Create user with email and password
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-            // Update user's profile with their name
-            await updateProfile(userCredential.user, {
-                displayName: name,
+            // Update Firebase Auth profile (Only for display purposes)
+            await updateProfile(user, {
+                displayName: `${FirstName} ${LastName}`,
             });
 
-            const user = userCredential.user; // Get the user data after account creation
-
-            setUser(user); // Set the user in context
-            Navigate("/"); // Navigate to home after successful account creation
-            toast.success("Created Account. Log in now!", {
-                action: {
-                    label: "Close",
-                },
+            // Save FirstName and LastName separately in Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                FirstName,
+                LastName,
+                email,
             });
 
+            setUser({
+                uid: user.uid,
+                FirstName,
+                LastName,
+                email: user.email,
+            });
+
+            navigate("/");
+            toast.success("Account created successfully! Please log in.");
         } catch (err) {
-            toast.error("Email already in use or some error occurred!", {
-                action: {
-                    label: "Close",
-                },
-            });
+            toast.error("Error: Email already in use or invalid details.");
         }
     };
 
@@ -116,20 +160,18 @@ export default function CreateAccount() {
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle className="text-xl">Create Account</CardTitle>
-                    <CardDescription>
-                        Create Account With Google or with Facebook
-                    </CardDescription>
+                    <CardDescription>Sign up with Google or Facebook</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleCreateAccount}>
                         <div className="grid gap-4">
                             <div className="flex flex-col gap-2">
                                 <Button variant="outline" className="w-full" onClick={handleFacebookLogin}>
-                                    <RiFacebookFill />
+                                    <RiFacebookFill color="blue" />
                                     Login with Facebook
                                 </Button>
                                 <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
-                                    <RiGoogleFill />
+                                    <RiGoogleFill color="red" />
                                     Login with Google
                                 </Button>
                             </div>
@@ -139,12 +181,23 @@ export default function CreateAccount() {
                                 </span>
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="name">First Name</Label>
+                                <Label htmlFor="FirstName">First Name</Label>
                                 <Input
                                     type="text"
-                                    name="name"
+                                    name="FirstName"
                                     placeholder="First Name"
-                                    value={formData.name}
+                                    value={formData.FirstName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="LastName">Last Name</Label>
+                                <Input
+                                    type="text"
+                                    name="LastName"
+                                    placeholder="Last Name"
+                                    value={formData.LastName}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -172,7 +225,7 @@ export default function CreateAccount() {
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                <Label htmlFor="password">Confirm Password</Label>
                                 <Input
                                     type="password"
                                     name="confirmPassword"
@@ -183,34 +236,39 @@ export default function CreateAccount() {
                                 />
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Checkbox id="terms" required />
-                                <Label
-                                    htmlFor="terms"
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    I have read the{" "}
-                                    <Link to="" className="text-blue-800">Terms and Conditions</Link>
+                                <Checkbox
+                                    id="terms"
+                                    name="termsAccepted"
+                                    checked={formData.termsAccepted} // Make sure checkbox is controlled
+                                    onClick={() => setFormData((prevState) => ({
+                                        ...prevState,
+                                        termsAccepted: !prevState.termsAccepted // Toggle the checkbox state
+                                    }))}
+                                />
+                                <Label htmlFor="terms">
+                                    I accept the <Link to="" className="text-blue-800">Terms and Conditions</Link>
                                 </Label>
                             </div>
-                            {error && <p className="text-red-500 text-sm w-fit p-2 rounded-sm bg-accent">{error}</p>}
+                            {error && <p className="text-red-500 text-sm p-2 rounded bg-accent">{error}</p>}
                             <Button
-                                variant="blue"
                                 type="submit"
+                                variant="blue"
                                 className="w-full"
-                                disabled={!formData.name || !formData.email || !formData.password || !formData.confirmPassword}
+                                disabled={
+                                    !formData.FirstName ||
+                                    !formData.LastName ||
+                                    !formData.email ||
+                                    !formData.password ||
+                                    !formData.confirmPassword ||
+                                    !formData.termsAccepted
+                                }
                             >
                                 Create Account
                             </Button>
                         </div>
-                        <div className="text-center text-sm mt-2">
-                            Your Have Already account
-                            <Link to="/" className="underline underline-offset-4 ml-2">
-                                Sign In
-                            </Link>
-                        </div>
                     </form>
                 </CardContent>
             </Card>
-        </div >
+        </div>
     );
 }

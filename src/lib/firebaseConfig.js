@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, push, set, get, remove, child } from "firebase/database";
+import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmLf0YTdGYMGz0TxoucBUgymKj5FgLkeU",
@@ -17,9 +18,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize services
+const firebaseStore = getFirestore(app);
 const db = getDatabase(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-export { app, db, auth, ref, push, set, get, remove, child, googleProvider, facebookProvider, onAuthStateChanged };
+export { app, db, firebaseStore, auth, ref, push, set, get, remove, child, googleProvider, facebookProvider, onAuthStateChanged, doc, getDoc, setDoc };

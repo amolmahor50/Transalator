@@ -16,6 +16,7 @@ import Loader from "./components/ui/Loader.jsx";
 import { getUser } from "./components/Authentication/auth.jsx";
 import ForgotForm from "./components/Authentication/forgotForm.jsx";
 import CreateAccount from "./components/Authentication/CreateAccount.jsx";
+import Profile from "./components/Profile.jsx";
 
 // LoginHandler Component
 const LoginHandler = ({ children }) => {
@@ -99,6 +100,15 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    ),
+  },
+
 ]);
 
 // Render App

@@ -61,11 +61,6 @@ export const TranslateProvider = ({ children }) => {
                 setAllSavedData(formattedData);
             } else {
                 setAllSavedData([]);
-                toast.info("No saved translations found.", {
-                    action: {
-                        label: "Close",
-                    },
-                });
             }
         } catch (error) {
             toast.error(`Error fetching translations: ${error.message}`, {
@@ -158,7 +153,11 @@ export const TranslateProvider = ({ children }) => {
                     const data = await response.json();
                     setTranslatedText(data.responseData.translatedText);
                 } catch (error) {
-                    toast.error("Error fetching translation.");
+                    toast.error("Error fetching translation.", {
+                        action: {
+                            label: "Close",
+                        },
+                    });
                 }
             }, 1000); // 1-second debounce
             setDebounceTimer(timer);
