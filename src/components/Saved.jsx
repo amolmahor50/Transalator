@@ -288,7 +288,7 @@ export function SavedData() {
                                             variant="caption"
                                             className="flex gap-2 items-center"
                                         >
-                                            {highlightText(type.sourceText, searchQuery)}
+                                            {highlightText((type.sourceText).length > 30 ? (type.sourceText).slice(0, 30) + "..." : (type.sourceText), searchQuery)}
                                             <ToolTip
                                                 TitleToolTip="Listen"
                                                 onClick={() =>
@@ -302,7 +302,7 @@ export function SavedData() {
                                             variant="caption"
                                             className="flex gap-2 items-center"
                                         >
-                                            {highlightText(type.translatedText, searchQuery)}
+                                            {highlightText((type.translatedText).length > 32 ? (type.translatedText).slice(0, 32) + "..." : (type.translatedText), searchQuery)}
                                             <ToolTip
                                                 TitleToolTip="Listen"
                                                 onClick={() =>

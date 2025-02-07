@@ -72,7 +72,7 @@ export const TranslateProvider = ({ children }) => {
     };
 
     // Save a new translation to Firebase
-    const handleSaveTranslationData = async (event, newValue) => {
+    const handleSaveTranslationData = async () => {
         if (!user) {
             toast.error("You must be logged in to save translations.", {
                 action: {

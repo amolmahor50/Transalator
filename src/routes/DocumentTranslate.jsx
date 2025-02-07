@@ -61,7 +61,7 @@ function DocumentUpload() {
 
   return (
     <>
-      <Container className="sm:h-[300px] text-center h-auto border-b sm:border-2 sm:rounded-lg grid sm:grid-cols-12 grid-cols-1">
+      <Container className="sm:h-[300px] text-center h-auto sm:pb-0 pb-4 border-b sm:border-2 sm:rounded-lg grid sm:grid-cols-12 grid-cols-1">
         {/* Show document preview after upload, no drag-and-drop or selection options */}
         {uploadedDocument ? (
           <Box className="col-span-12 my-10 flex justify-center items-center">
