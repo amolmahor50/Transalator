@@ -19,6 +19,8 @@ import { useContext, useEffect, useState } from "react";
 import { TranslateContextData } from "../../context/TranslateContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
 
 function LoginForm() {
   const { setUser } = useContext(TranslateContextData);
@@ -27,6 +29,7 @@ function LoginForm() {
   // Retrieve last email from localStorage (if available)
   const [email, setEmail] = useState(localStorage.getItem("savedEmail") || "");
   const [password, setPassword] = useState("");
+  const [typePassword, setTypePassword] = useState("password");
 
   // Save email to localStorage (on login)
   const saveEmailToStorage = (newEmail) => {
@@ -109,6 +112,15 @@ function LoginForm() {
     }
   };
 
+  const handleShow_hide_password = (type) => {
+    if (type === "password") {
+      setTypePassword("text");
+    }
+    else if (type === "text") {
+      setTypePassword("password");
+    }
+  }
+
   return (
     <div className="max-w-sm mx-auto my-10">
       <div className="flex flex-col gap-6">
@@ -166,13 +178,22 @@ function LoginForm() {
                         Forgot your password?
                       </Link>
                     </div>
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                    <div className="relative flex items-center">
+                      <Input
+                        type={typePassword}
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <span className="absolute right-4 cursor-pointer">
+                        {
+                          typePassword === "password" ?
+                            <IoEyeOutline size={20} onClick={() => handleShow_hide_password("password")} />
+                            : <IoEyeOffOutline size={20} onClick={() => handleShow_hide_password("text")} />
+                        }
+                      </span>
+                    </div>
                   </div>
                   <Button
                     variant="blue"

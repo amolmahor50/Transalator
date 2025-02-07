@@ -23,12 +23,24 @@ import {
 } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore
 import { toast } from "sonner";
+import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
+
+const required = [
+    { regex: /.{8,}/, message: "Password must be at least 8 characters long." },
+    { regex: /[0-9]/, message: "Password must contain at least one number." },
+    { regex: /[A-Z]/, message: "Password must contain at least one uppercase letter." },
+    { regex: /[a-z]/, message: "Password must contain at least one lowercase letter." },
+    { regex: /[^A-Za-z0-9]/, message: "Password must contain at least one special character." }
+];
 
 export default function CreateAccount() {
     const { setUser } = useContext(TranslateContextData);
     const navigate = useNavigate();
     const auth = getAuth();
     const db = getFirestore(); // Firestore instance
+    const [typePassword, setTypePassword] = useState("password");
+    const [confirmTypePassword, setConfirmTypePassword] = useState("password");
 
     // State for form inputs
     const [formData, setFormData] = useState({
@@ -51,25 +63,22 @@ export default function CreateAccount() {
         });
     };
 
+    const validatePassword = (password) => {
+        for (let rule of required) {
+            if (!rule.regex.test(password)) return rule.message;
+        }
+        return null;
+    };
+
     // Validation function
     const validateForm = () => {
         const { FirstName, LastName, email, password, confirmPassword, termsAccepted } = formData;
-
-        if (!FirstName.trim() || !LastName.trim()) {
-            return "First and Last Name are required.";
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return "Invalid email format.";
-        }
-        if (password.length < 6) {
-            return "Password must be at least 6 characters.";
-        }
-        if (password !== confirmPassword) {
-            return "Passwords do not match.";
-        }
-        if (!termsAccepted) {
-            return "You must accept the Terms and Conditions."; // Show error if terms are not accepted
-        }
+        if (!FirstName.trim() || !LastName.trim()) return "First and Last Name are required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format.";
+        const passwordError = validatePassword(password);
+        if (passwordError) return passwordError;
+        if (password !== confirmPassword) return "Passwords do not match.";
+        if (!termsAccepted) return "You must accept the Terms and Conditions.";
         return null;
     };
 
@@ -155,6 +164,24 @@ export default function CreateAccount() {
         }
     };
 
+    const handleShow_hide_password1 = (type) => {
+        if (type === "password") {
+            setTypePassword("text");
+        }
+        else if (type === "text") {
+            setTypePassword("password");
+        }
+    }
+
+    const handleShow_hide_password2 = (type) => {
+        if (type === "password") {
+            setConfirmTypePassword("text");
+        }
+        else if (type === "text") {
+            setConfirmTypePassword("password");
+        }
+    }
+
     return (
         <div className="max-w-sm mx-auto my-12">
             <Card>
@@ -164,7 +191,7 @@ export default function CreateAccount() {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleCreateAccount}>
-                        <div className="grid gap-4">
+                        <div className="grid gap-3">
                             <div className="flex flex-col gap-2">
                                 <Button variant="outline" className="w-full" onClick={handleFacebookLogin}>
                                     <RiFacebookFill color="blue" />
@@ -215,25 +242,43 @@ export default function CreateAccount() {
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Password</Label>
-                                <Input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    required
-                                />
+                                <div className="relative flex items-center">
+                                    <Input
+                                        type={typePassword}
+                                        name="password"
+                                        placeholder="Password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    <span className="absolute right-4 cursor-pointer">
+                                        {
+                                            typePassword === "password" ?
+                                                <IoEyeOutline size={20} onClick={() => handleShow_hide_password1("password")} />
+                                                : <IoEyeOffOutline size={20} onClick={() => handleShow_hide_password1("text")} />
+                                        }
+                                    </span>
+                                </div>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Confirm Password</Label>
-                                <Input
-                                    type="password"
-                                    name="confirmPassword"
-                                    placeholder="Confirm Password"
-                                    value={formData.confirmPassword}
-                                    onChange={handleInputChange}
-                                    required
-                                />
+                                <div className="relative flex items-center">
+                                    <Input
+                                        type={confirmTypePassword}
+                                        name="confirmPassword"
+                                        placeholder="Confirm Password"
+                                        value={formData.confirmPassword}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    <span className="absolute right-4 cursor-pointer">
+                                        {
+                                            confirmTypePassword === "password" ?
+                                                <IoEyeOutline size={20} onClick={() => handleShow_hide_password2("password")} />
+                                                : <IoEyeOffOutline size={20} onClick={() => handleShow_hide_password2("text")} />
+                                        }
+                                    </span>
+                                </div>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Checkbox
