@@ -1,4 +1,4 @@
-import { auth, googleProvider, facebookProvider } from "../../lib/firebaseConfig";
+import { auth, googleProvider, facebookProvider, doc, getDoc, firebaseStore } from "../../lib/firebaseConfig";
 import { signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { toast } from "sonner";
 
@@ -9,14 +9,13 @@ export const getUser = () => {
 };
 
 // Save the additional profile data to localStorage
-const saveUserProfile = (user, additionalInfo) => {
+export const saveUserProfile = (user, additionalInfo) => {
     localStorage.setItem("user", JSON.stringify({
         uid: user.uid,
-        FullName: user.displayName,
-        FirstName: user.displayName?.split(" ")[0] || "", // Assuming FirstName is the first part of displayName
-        LastName: user.displayName?.split(" ")[1] || "",  // Assuming LastName is the second part of displayName
         email: user.email,
-        photo: user.photoURL,
+        firstName: additionalInfo.firstName || user.displayName?.split(" ")[0] || "",
+        lastName: additionalInfo.lastName || user.displayName?.split(" ")[1] || "",
+        photo: additionalInfo.photo || user.photoURL || "",
         mobile: additionalInfo.mobile || "",
         address: additionalInfo.address || "",
         gender: additionalInfo.gender || "",
@@ -30,29 +29,26 @@ export const loginWithGoogle = async () => {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
 
-        // Here you can prompt the user to fill additional profile details
-        const additionalInfo = {
-            mobile: "",   // Replace with data gathered from your form
-            address: "",  // Replace with data gathered from your form
-            gender: "",   // Replace with data gathered from your form
-            dateOfBirth: "", // Replace with data gathered from your form
-        };
+        if (user?.uid) {
+            const userRef = doc(firebaseStore, "users", user.uid);
+            const userDoc = await getDoc(userRef);
 
-        // Save user details to localStorage
-        saveUserProfile(user, additionalInfo);
+            const additionalInfo = userDoc.exists() ?
+                userDoc.data()
+                :
+                {
+                    mobile: "",
+                    address: "",
+                    gender: "",
+                    dateOfBirth: ""
+                };
 
-        toast("Login Successfully..", {
-            action: {
-                label: "Close"
-            }
-        });
+            saveUserProfile(user, additionalInfo);
+            toast("Login Successfully!", { action: { label: "Close" } });
+        }
     } catch (error) {
-        console.error("Error during login:", error.message);
-        toast("Please Put Your correct info.", {
-            action: {
-                label: "Close"
-            }
-        });
+        console.error("Google Login Error:", error.message);
+        toast("Please enter correct info.", { action: { label: "Close" } });
     }
 };
 
@@ -62,29 +58,26 @@ export const loginWithFacebook = async () => {
         const result = await signInWithPopup(auth, facebookProvider);
         const user = result.user;
 
-        // Here you can prompt the user to fill additional profile details
-        const additionalInfo = {
-            mobile: "",   // Replace with data gathered from your form
-            address: "",  // Replace with data gathered from your form
-            gender: "",   // Replace with data gathered from your form
-            dateOfBirth: "", // Replace with data gathered from your form
-        };
+        if (user?.uid) {
+            const userRef = doc(firebaseStore, "users", user.uid);
+            const userDoc = await getDoc(userRef);
 
-        // Save user details to localStorage
-        saveUserProfile(user, additionalInfo);
+            const additionalInfo = userDoc.exists() ?
+                userDoc.data()
+                :
+                {
+                    mobile: "",
+                    address: "",
+                    gender: "",
+                    dateOfBirth: ""
+                };
 
-        toast("Login Successfully..", {
-            action: {
-                label: "Close"
-            }
-        });
+            saveUserProfile(user, additionalInfo);
+            toast("Login Successfully!", { action: { label: "Close" } });
+        }
     } catch (error) {
-        console.error("Error during Facebook login:", error.message);
-        toast("Please Put Your correct info.", {
-            action: {
-                label: "Close"
-            }
-        });
+        console.error("Facebook Login Error:", error.message);
+        toast("Please enter correct info.", { action: { label: "Close" } });
     }
 };
 
@@ -96,10 +89,10 @@ export const loginWithEmail = async (email, password) => {
 
         // Here you can prompt the user to fill additional profile details
         const additionalInfo = {
-            mobile: "",   // Replace with data gathered from your form
-            address: "",  // Replace with data gathered from your form
-            gender: "",   // Replace with data gathered from your form
-            dateOfBirth: "", // Replace with data gathered from your form
+            mobile: "",
+            address: "",
+            gender: "",
+            dateOfBirth: "",
         };
 
         // Save user details to localStorage

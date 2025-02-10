@@ -67,7 +67,7 @@ function Navbar() {
             <div className='flex gap-4'>
               <Avatar alt="Remy Sharp" src={user.photo} />
               <div className='flex flex-col mb-2'>
-                <span className=''>{user.FullName}</span>
+                <span className=''>{`${user.firstName} ${user.lastName}`}</span>
                 <span className='text-gray-600 text-sm'>{user.email}</span>
               </div>
             </div>

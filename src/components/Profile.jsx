@@ -11,22 +11,25 @@ import { MdDeleteOutline } from "react-icons/md";
 import { GoPencil } from "react-icons/go";
 import { firebaseStore, doc, getDoc, setDoc } from "../lib/firebaseConfig";
 import { toast } from "sonner";
+import { saveUserProfile } from "./Authentication/auth";
 
 export default function Profile() {
-    const { user } = useContext(TranslateContextData);
+    const { user, setUser } = useContext(TranslateContextData);
+
+    console.log("user", user);
 
     // State for form inputs & validation errors
     const [formData, setFormData] = useState({
-        name: user?.FirstName || "",
-        lastName: user?.LastName || "",
-        email: user?.email || "",
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        email: user?.email,
         dateOfBirth: user?.dateOfBirth || "",
         mobile: user?.mobile || "",
         gender: user?.gender || "",
         address: user?.address || "",
+        photo: user?.photo || "",
     });
 
-    const [errors, setErrors] = useState({}); // Store validation errors
 
     // Fetch user data from Firestore when component mounts
     useEffect(() => {
@@ -37,7 +40,8 @@ export default function Profile() {
                     const userDoc = await getDoc(userRef);
 
                     if (userDoc.exists()) {
-                        setFormData((prev) => ({ ...prev, ...userDoc.data() })); // Merge existing data
+                        setFormData((prev) => ({ ...prev, ...userDoc.data() }));
+                        saveUserProfile(user, userDoc.data());
                     } else {
                         toast.info("No user data found!", {
                             action: {
@@ -61,71 +65,65 @@ export default function Profile() {
     // Handle input change with validation
     const handleChange = (e) => {
         const { name, value } = e.target;
-        let errorMsg = "";
 
         if (name === "mobile") {
             const formattedValue = value.replace(/\D/g, "").slice(0, 10);
             setFormData((prev) => ({ ...prev, [name]: formattedValue }));
             if (formattedValue.length !== 10) {
-                errorMsg = "Mobile number must be exactly 10 digits.";
             }
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
             if (!value.trim()) {
-                errorMsg = `${name.replace(/([A-Z])/g, " $1")} is required.`;
             }
         }
-
-        setErrors((prev) => ({ ...prev, [name]: errorMsg }));
     };
 
     // Handle radio button change
     const handleGenderChange = (value) => {
         setFormData((prev) => ({ ...prev, gender: value }));
-        setErrors((prev) => ({ ...prev, gender: "" }));
     };
 
-    // Validate entire form before submission
-    const validateForm = () => {
-        let newErrors = {};
-        if (!formData.name?.trim()) newErrors.name = "First Name is required.";
-        if (!formData.lastName?.trim()) newErrors.lastName = "Last Name is required.";
-        if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of Birth is required.";
-        if (!formData.mobile || formData.mobile.length !== 10) newErrors.mobile = "Mobile number must be 10 digits.";
-        if (!formData.address?.trim()) newErrors.address = "Address is required.";
+    // images uploded file 
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setFormData((prev) => ({ ...prev, photo: reader.result }));
+        };
     };
 
     // Handle form submission and update Firestore
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            try {
-                const userRef = doc(firebaseStore, "users", user.uid);
-                await setDoc(userRef, {
-                    FirstName: formData.name,
-                    LastName: formData.lastName,
-                    email: formData.email,
-                    dateOfBirth: formData.dateOfBirth,
-                    mobile: formData.mobile,
-                    gender: formData.gender,
-                    address: formData.address,
-                }, { merge: true });
-                toast.success("Profile Updated Successfully!", {
-                    action: {
-                        label: "Close",
-                    },
-                });
-                console.log("user saved profile:", formData)
-            } catch (error) {
-                toast.error(`Error updating profile:${error}`, {
-                    action: {
-                        label: "Close",
-                    },
-                });
-            }
+        try {
+            const userRef = doc(firebaseStore, "users", user.uid);
+            await setDoc(userRef, {
+                email: formData.email,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                dateOfBirth: formData.dateOfBirth,
+                mobile: formData.mobile,
+                gender: formData.gender,
+                address: formData.address,
+                photo: formData.photo,
+            }, { merge: true });
+            setUser(formData);
+            saveUserProfile(user, formData);
+            toast.success("Profile Updated Successfully!", {
+                action: {
+                    label: "Close",
+                },
+            });
+        } catch (error) {
+            console.log(error)
+            toast.error(`Error updating profile:${error}`, {
+                action: {
+                    label: "Close",
+                },
+            });
         }
     };
 
@@ -141,7 +139,7 @@ export default function Profile() {
                     <div className="flex gap-4 items-center pb-4 border-b-2">
                         <Avatar
                             alt="Profile Picture"
-                            src={user.photo}
+                            src={formData.photo}
                             sx={{ width: 100, height: 100 }}
                         />
                         <div className="flex flex-col gap-2">
@@ -149,10 +147,19 @@ export default function Profile() {
                             <span className="text-gray-600 text-sm">Supports PNGs, JPEGs under 3MB</span>
                             <div className="flex items-center gap-2">
                                 <Button variant="blue" size="sm" className="w-fit">
-                                    <GoPencil />
-                                    <span>Edit</span>
+                                    <label htmlFor="imageUpload" className="cursor-pointer flex items-center gap-2 ">
+                                        <GoPencil />
+                                        <span>Edit</span>
+                                        <Input
+                                            id="imageUpload"
+                                            type="file"
+                                            onChange={handleImageUpload}
+                                            accept="image/*"
+                                            className="hidden"
+                                        />
+                                    </label>
                                 </Button>
-                                <Button variant="destructive" size="sm" className="w-fit">
+                                <Button variant="destructive" size="sm" className="w-fit" onClick={() => setFormData((prev) => ({ ...prev, photo: "" }))}>
                                     <MdDeleteOutline />
                                     <span>Delete</span>
                                 </Button>
@@ -168,13 +175,11 @@ export default function Profile() {
                         <div className="grid sm:grid-cols-2 gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">First Name</Label>
-                                <Input name="name" placeholder="First Name" type="text" value={formData.name} onChange={handleChange} />
-                                {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+                                <Input name="firstName" placeholder="First Name" type="text" value={formData.firstName} onChange={handleChange} />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="lastName">Last Name</Label>
                                 <Input name="lastName" placeholder="Last Name" type="text" value={formData.lastName} onChange={handleChange} />
-                                {errors.lastName && <span className="text-red-500 text-sm">{errors.lastName}</span>}
                             </div>
                         </div>
 
@@ -187,7 +192,6 @@ export default function Profile() {
                             <div className="grid gap-2">
                                 <Label htmlFor="dateOfBirth">Date Of Birth</Label>
                                 <Input name="dateOfBirth" type="date" value={formData.dateOfBirth} onChange={handleChange} />
-                                {errors.dateOfBirth && <span className="text-red-500 text-sm">{errors.dateOfBirth}</span>}
                             </div>
                         </div>
 
@@ -196,7 +200,6 @@ export default function Profile() {
                             <div className="grid gap-2">
                                 <Label htmlFor="mobile">Mobile Number</Label>
                                 <Input name="mobile" placeholder="Mobile Number" type="text" value={formData.mobile} onChange={handleChange} />
-                                {errors.mobile && <span className="text-red-500 text-sm">{errors.mobile}</span>}
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="gender">Gender</Label>
@@ -222,7 +225,6 @@ export default function Profile() {
                             <div className="grid gap-2">
                                 <Label htmlFor="address">Address</Label>
                                 <textarea name="address" placeholder="Address" rows={3} value={formData.address} onChange={handleChange} className="border p-3 rounded-md shadow-sm" />
-                                {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
                             </div>
                         </div>
 
