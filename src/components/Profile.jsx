@@ -104,6 +104,7 @@ export default function Profile() {
             }, { merge: true });
             setUser(formData);
             saveUserProfile(user, formData);
+            console.log(formData)
             toast.success("Profile Updated Successfully!", {
                 action: {
                     label: "Close",
@@ -130,11 +131,13 @@ export default function Profile() {
                     {/* Profile Picture */}
                     <div className="flex gap-4 items-center pb-4 border-b-2">
                         <Avatar
-                            alt="Profile Picture"
-                            src={formData.photo}
-                            sx={{ width: 100, height: 100 }}
-                        />
-                        <div className="flex flex-col gap-2">
+                            alt={formData?.firstName}
+                            src={formData?.photo}
+                            sx={{ width: 85, height: 85 }}
+                        >
+                            {user?.firstName?.slice(0, 1).toUpperCase()}
+                        </Avatar>
+                        <div className="flex flex-col gap-1">
                             <span className="text-xl font-semibold">Profile Picture</span>
                             <span className="text-gray-600 text-sm">Supports PNGs, JPEGs under 3MB</span>
                             <div className="flex items-center gap-2">
@@ -167,11 +170,11 @@ export default function Profile() {
                         <div className="grid sm:grid-cols-2 gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">First Name</Label>
-                                <Input name="firstName" placeholder="First Name" type="text" value={formData.firstName} onChange={handleChange} />
+                                <Input name="firstName" placeholder="First Name" type="text" value={formData?.firstName?.charAt(0).toUpperCase() + formData?.firstName?.slice(1)} onChange={handleChange} />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="lastName">Last Name</Label>
-                                <Input name="lastName" placeholder="Last Name" type="text" value={formData.lastName} onChange={handleChange} />
+                                <Input name="lastName" placeholder="Last Name" type="text" value={formData?.lastName?.charAt(0).toUpperCase() + formData?.lastName?.slice(1)} onChange={handleChange} />
                             </div>
                         </div>
 

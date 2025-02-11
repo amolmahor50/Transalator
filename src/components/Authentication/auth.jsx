@@ -1,4 +1,4 @@
-import { auth, googleProvider, facebookProvider, doc, getDoc, firebaseStore } from "../../lib/firebaseConfig";
+import { auth, googleProvider, doc, getDoc, firebaseStore } from "../../lib/firebaseConfig";
 import { signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { toast } from "sonner";
 
@@ -10,17 +10,19 @@ export const getUser = () => {
 
 // Save the additional profile data to localStorage
 export const saveUserProfile = (user, additionalInfo) => {
-    localStorage.setItem("user", JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        firstName: additionalInfo.firstName || user.displayName?.split(" ")[0] || "",
-        lastName: additionalInfo.lastName || user.displayName?.split(" ")[1] || "",
-        photo: additionalInfo.photo || user.photoURL || "",
-        mobile: additionalInfo.mobile || "",
-        address: additionalInfo.address || "",
-        gender: additionalInfo.gender || "",
-        dateOfBirth: additionalInfo.dateOfBirth || "",
-    }));
+    const finalData = {
+        uid: user?.uid,
+        email: user?.email,
+        firstName: additionalInfo?.firstName || user?.displayName?.split(" ")[0] || "",
+        lastName: additionalInfo?.lastName || user?.displayName?.split(" ")[1] || "",
+        photo: additionalInfo?.photo || user?.photoURL || "", // Ensure photoURL is saved
+        mobile: additionalInfo?.mobile || "",
+        address: additionalInfo?.address || "",
+        gender: additionalInfo?.gender || "",
+        dateOfBirth: additionalInfo?.dateOfBirth || "",
+    };
+
+    localStorage.setItem("user", JSON.stringify(finalData));
 };
 
 // Login with Google
@@ -33,14 +35,13 @@ export const loginWithGoogle = async () => {
             const userRef = doc(firebaseStore, "users", user.uid);
             const userDoc = await getDoc(userRef);
 
-            const additionalInfo = userDoc.exists() ?
-                userDoc.data()
-                :
-                {
+            const additionalInfo = userDoc.exists()
+                ? userDoc.data()
+                : {
                     mobile: "",
                     address: "",
                     gender: "",
-                    dateOfBirth: ""
+                    dateOfBirth: "",
                 };
 
             saveUserProfile(user, additionalInfo);
@@ -52,11 +53,11 @@ export const loginWithGoogle = async () => {
     }
 };
 
-// Login with Facebook
-export const loginWithFacebook = async () => {
+// Login with Email and Password
+export const loginWithEmail = async (email, password) => {
     try {
-        const result = await signInWithPopup(auth, facebookProvider);
-        const user = result.user;
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
         if (user?.uid) {
             const userRef = doc(firebaseStore, "users", user.uid);
@@ -76,35 +77,7 @@ export const loginWithFacebook = async () => {
             toast("Login Successfully!", { action: { label: "Close" } });
         }
     } catch (error) {
-        console.error("Facebook Login Error:", error.message);
-        toast("Please enter correct info.", { action: { label: "Close" } });
-    }
-};
-
-// Login with Email and Password
-export const loginWithEmail = async (email, password) => {
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Here you can prompt the user to fill additional profile details
-        const additionalInfo = {
-            mobile: "",
-            address: "",
-            gender: "",
-            dateOfBirth: "",
-        };
-
-        // Save user details to localStorage
-        saveUserProfile(user, additionalInfo);
-
-        toast("Login Successfully..", {
-            action: {
-                label: "Close"
-            }
-        });
-    } catch (error) {
-        console.error("Error during login:", error.message);
+        console.error("email and password login error:", error.message);
         toast("Please Put Your correct Password and Gmail.", {
             action: {
                 label: "Close"

@@ -8,14 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RiFacebookFill, RiGoogleFill } from "react-icons/ri";
+import { RiGoogleFill } from "react-icons/ri";
 import {
   getUser,
   loginWithEmail,
-  loginWithFacebook,
   loginWithGoogle,
 } from "./auth";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { TranslateContextData } from "../../context/TranslateContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -61,31 +60,6 @@ function LoginForm() {
     }
   };
 
-  // Handle Facebook login
-  const handleFacebookLogin = async () => {
-    try {
-      await loginWithFacebook();
-      const user = getUser();
-      if (user) {
-        setUser(user);
-        saveEmailToStorage(user.email);
-        Navigate("/translator");
-      } else {
-        toast.error("Failed to retrieve user after Facebook login.", {
-          action: {
-            label: "Close",
-          },
-        });
-      }
-    } catch (error) {
-      toast.error(`Facebook login failed:${error}`, {
-        action: {
-          label: "Close",
-        },
-      });
-    }
-  };
-
   // Handle Email and Password login
   const handleEmailWithLogin = async (e) => {
     e.preventDefault();
@@ -122,36 +96,26 @@ function LoginForm() {
   }
 
   return (
-    <div className="max-w-sm mx-auto my-10">
+    <div className="max-w-sm mx-auto flex justify-center items-center h-screen">
       <div className="flex flex-col gap-6">
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-xl">Welcome back</CardTitle>
+            <CardTitle className="text-xl">Welcome</CardTitle>
             <CardDescription>
-              Login with your Facebook or Google account
+              Login with your Google account
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailWithLogin}>
               <div className="grid gap-4">
-                <div className="flex flex-col gap-2">
-                  <Button
-                    variant="outline"
-                    className="w-full flex items-center gap-2"
-                    onClick={handleFacebookLogin}
-                  >
-                    <RiFacebookFill />
-                    Login with Facebook
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full flex items-center gap-2"
-                    onClick={handleGoogleLogin}
-                  >
-                    <RiGoogleFill />
-                    Login with Google
-                  </Button>
-                </div>
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center gap-2"
+                  onClick={handleGoogleLogin}
+                >
+                  <RiGoogleFill color="orange" />
+                  Login with Google
+                </Button>
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                   <span className="relative z-10 bg-background px-2 text-muted-foreground">
                     Or continue with

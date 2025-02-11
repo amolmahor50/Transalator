@@ -59,15 +59,27 @@ function Navbar() {
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size={10} className="border-none outline-none focus:outline-none rounded-full">
               <ToolTip TitleToolTip="Google Account">
-                <Avatar alt="Remy Sharp" src={user.photo} />
+                <Avatar
+                  alt={user?.firstName}
+                  src={user?.photo || user?.photoURL}
+                  className="w-8 h-8 rounded-full"
+                >
+                  {user?.firstName?.slice(0, 1).toUpperCase()}
+                </Avatar>
               </ToolTip>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-72 sm:w-80 sm:mr-12 mr-4 sm:p-8 p-4 rounded-lg">
             <div className='flex gap-4'>
-              <Avatar alt="Remy Sharp" src={user.photo} />
+              <Avatar
+                alt={user?.firstName}
+                src={user?.photo || user?.photoURL}
+              >
+                {user?.firstName?.slice(0, 1).toUpperCase()}
+              </Avatar>
+
               <div className='flex flex-col mb-2'>
-                <span className=''>{`${user.firstName} ${user.lastName}`}</span>
+                <span className=''>{`${user?.firstName?.charAt(0).toUpperCase() + user?.firstName?.slice(1)} ${user?.lastName?.charAt(0).toUpperCase() + user?.lastName?.slice(1)}`}</span>
                 <span className='text-gray-600 text-sm'>{user.email}</span>
               </div>
             </div>

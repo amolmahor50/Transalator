@@ -1,12 +1,12 @@
 import Navbar from "./Navbar";
-import { Box, Stack, Typography } from "@mui/material";
 import { toast } from "sonner"
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { TranslateContextData } from "../context/TranslateContext";
 import { EmailAuthProvider, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from "firebase/auth";
 import { db, ref, remove, firebaseStore, auth, deleteDoc, doc, deleteUser } from "../lib/firebaseConfig"; // Ensure correct Firebase imports
 import { logout } from "../components/Authentication/auth";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,21 +17,34 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export default function Setting() {
     const { setUser } = useContext(TranslateContextData);
-    const Navigate = useNavigate()
+    const Navigate = useNavigate();
+    const [password, setPassword] = useState("");
+
+    const user = auth.currentUser;
 
     // parmanently deletd account and deletd data all for user and navigate the login page
     const handleDeletedAccount = async () => {
-        const user = auth.currentUser;
 
         try {
             // Step 1: Re-authenticate the user
             if (user.providerData[0].providerId === "password") {
                 // If user signed in with email & password, ask for password
-                const password = prompt("Enter your password to confirm account deletion:");
                 if (!password) {
                     toast.error("Password is required for authentication.", {
                         action: {
@@ -60,6 +73,7 @@ export default function Setting() {
 
             // Step 5: Clear local data
             localStorage.removeItem("user");
+            localStorage.removeItem("savedEmail");
 
             // navigate to the login page and log out account 
             await logout();
@@ -82,33 +96,71 @@ export default function Setting() {
     }
 
     return (
-        <div className="">
+        <div>
             <Navbar />
-            <Box className="mt-20 px-4 max-w-5xl mx-auto">
-                <Typography variant="h5">
-                    Setting
-                </Typography>
-                <Stack direction="column" marginTop="20px">
-                    <AlertDialog className="mx-10">
-                        <AlertDialogTrigger className="text-red-800 p-2 border-2 rounded-lg w-fit">
-                            Permanently Deleted Account
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete your account
-                                    and remove your data from our servers.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDeletedAccount} className="bg-blue-800 hover:bg-blue-500">Continue</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </Stack>
-            </Box>
+            <Card className="mt-16 max-w-5xl mx-auto border-none shadow-none">
+                <CardHeader>
+                    <CardTitle className="sm:text-4xl text-2xl border-b-2 pb-4">Setting</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {user && user.providerData.length > 0 ? (
+                        user.providerData[0].providerId !== "password" ? (
+                            <AlertDialog className="mx-10">
+                                <AlertDialogTrigger className="text-red-800 p-2 border-2 rounded-lg w-fit text-sm">
+                                    Permanently Delete Account
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete your account
+                                            and remove your data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleDeletedAccount} className="bg-blue-800 hover:bg-blue-500">
+                                            Continue
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        ) : (
+                            <Dialog>
+                                <DialogTrigger asChild className="p-2 border-2 rounded-lg w-fit">
+                                    <Button variant="outline" className="text-red-800 p-2 border-2 rounded-lg w-fit text-sm">
+                                        Permanently Delete Account
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                        <DialogTitle></DialogTitle>
+                                        <DialogDescription>
+                                            Enter your password to confirm account deletion:
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input
+                                            id="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Enter Your Logged in Password"
+                                        />
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type="submit" variant="blue" onClick={handleDeletedAccount}>
+                                            Save changes
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )
+                    ) : (
+                        <p className="text-center text-red-600">User data not found. Please log in again.</p>
+                    )}
+                </CardContent>
+            </Card>
         </div>
-    )
+    );
 }
