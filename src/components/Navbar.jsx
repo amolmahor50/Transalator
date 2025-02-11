@@ -49,7 +49,7 @@ function Navbar() {
       </Stack>
 
       <Stack direction="row" className='flex items-center gap-2'>
-        <ToolTip TitleToolTip="Setting">
+        <ToolTip TitleToolTip="Setting" onClick={() => Navigate('/setting')}>
           <IoSettingsOutline />
         </ToolTip>
         <ToolTip TitleToolTip="Google apps">

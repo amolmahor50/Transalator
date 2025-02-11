@@ -17,6 +17,7 @@ import { getUser } from "./components/Authentication/auth.jsx";
 import ForgotForm from "./components/Authentication/forgotForm.jsx";
 import CreateAccount from "./components/Authentication/CreateAccount.jsx";
 import Profile from "./components/Profile.jsx";
+import Setting from "./components/Setting.jsx";
 
 // LoginHandler Component
 const LoginHandler = ({ children }) => {
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Profile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/setting",
+    element: (
+      <ProtectedRoute>
+        <Setting />
       </ProtectedRoute>
     ),
   },
