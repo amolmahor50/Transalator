@@ -29,14 +29,47 @@ export const TranslateProvider = ({ children }) => {
         setTargetLanguage(tempLang);
     };
 
-    // Handle text-to-speech
+    // speech the speaker for text
     const utterText = (text, lang) => {
+        if (!text) {
+            toast.error("No text to read.");
+            return;
+        }
+
         const synth = window.speechSynthesis;
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang;
-        synth.speak(utterance);
+        let voices = synth.getVoices(); // Get available voices
+
+        const findBestVoice = () => {
+            voices = synth.getVoices(); // Refresh voice list in case it's not loaded initially
+
+            // Step 1: Try to find an exact match (e.g., "fr-FR" for French France)
+            let selectedVoice = voices.find(voice => voice.lang.toLowerCase() === lang.toLowerCase());
+
+            // Step 2: If no exact match, find a partial match (e.g., "fr" for "fr-FR")
+            if (!selectedVoice) {
+                selectedVoice = voices.find(voice => voice.lang.toLowerCase().startsWith(lang.split("-")[0]));
+            }
+
+            // Step 3: If no match, log a warning and do NOT force English unless necessary
+            if (!selectedVoice) {
+                toast.warning(`No voice found for "${lang}".`);
+                return;
+            }
+
+            utterance.voice = selectedVoice;
+            synth.speak(utterance);
+        };
+
+        // Some browsers need to wait for voices to load
+        if (voices.length === 0) {
+            synth.onvoiceschanged = findBestVoice;
+        } else {
+            findBestVoice();
+        }
     };
 
+    // Handle text speaker button click
     const handleSpeakerText = (id) => {
         if (id === "sourceText") {
             utterText(sourceText, sourceLanguage);

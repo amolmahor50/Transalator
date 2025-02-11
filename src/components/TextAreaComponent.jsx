@@ -1,22 +1,50 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import ToolTip from "./ui/ToolTip";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { HiOutlineSpeakerWave } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
+import Keyboard from "react-simple-keyboard";
+import "react-simple-keyboard/build/css/index.css";
 import { CiKeyboard } from "react-icons/ci";
 import { FaRegCopy } from "react-icons/fa6";
 import { PiShareNetwork } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
-import { Rating } from "@mui/material";
+import { Rating, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FeedBackLink } from "./ui/FeedBackLink";
 import { TranslateContextData } from "../context/TranslateContext";
 import { toast } from "sonner";
 import ManageDataHistory from "./ui/DataHistory";
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { FaWhatsapp, FaFacebook, FaInstagram, FaTelegram, FaTwitter, FaGithub, FaGoogleDrive } from "react-icons/fa";
+import { IoBluetooth, IoPrint, IoMail } from "react-icons/io5";
+
+const shareOptions = [
+    { name: "WhatsApp", icon: <FaWhatsapp className="text-green-500 text-3xl" />, link: "https://wa.me/?text=" },
+    { name: "Facebook", icon: <FaFacebook className="text-blue-500 text-3xl" />, link: "https://www.facebook.com/sharer/sharer.php?u=" },
+    { name: "Instagram", icon: <FaInstagram className="text-pink-500 text-3xl" />, link: "https://www.instagram.com/?url=" },
+    { name: "Telegram", icon: <FaTelegram className="text-blue-400 text-3xl" />, link: "https://t.me/share/url?url=" },
+    { name: "Twitter", icon: <FaTwitter className="text-blue-500 text-3xl" />, link: "https://twitter.com/intent/tweet?text=" },
+    { name: "Gmail", icon: <IoMail className="text-red-500 text-3xl" />, link: "mailto:?subject=Shared Translation&body=" },
+    { name: "GitHub Gist", icon: <FaGithub className="text-gray-700 text-3xl" />, link: "#" },
+    { name: "Google Drive", icon: <FaGoogleDrive className="text-yellow-500 text-3xl" />, link: "#" },
+    { name: "Print", icon: <IoPrint className="text-gray-700 text-3xl" />, link: "#" },
+    { name: "Bluetooth", icon: <IoBluetooth className="text-blue-600 text-3xl" />, link: "#" }
+];
 
 export function TextAreaGrid() {
-    const { sourceText, setSourceText, translatedText, sourceLanguage, targetLanguage, handleSaveTranslationData } =
+    const { sourceText, setSourceText, translatedText, setTranslatedText, sourceLanguage, handleSaveTranslationData, handleSpeakerText } =
         useContext(TranslateContextData);
+    const [showKeyboard, setShowKeyboard] = useState(false);
+    const [input, setInput] = useState(""); // State for input field
+    const [layout, setLayout] = useState("default");
 
     const handleTextareaResize = (e) => {
         const textarea = e.target;
@@ -24,9 +52,33 @@ export function TextAreaGrid() {
         textarea.style.height = `${textarea.scrollHeight}px`; // Set height based on scrollHeight
     };
 
+    // custom keyboard
+    const handleKeyboardInput = (input) => {
+        setInput(input);
+        setSourceText(input);
+    };
+
+    // Handle special keys (Shift, Enter, Backspace)
+    const handleKeyPress = (button) => {
+        if (button === "{shift}" || button === "{lock}") {
+            setLayout(layout === "default" ? "shift" : "default");
+        } else if (button === "{bksp}") {
+            setInput(input.slice(0, -1));
+            setSourceText(input.slice(0, -1));
+        } else if (button === "{enter}") {
+            setInput(input + "\n");
+            setSourceText(input + "\n");
+        } else {
+            setInput(input + button);
+            setSourceText(input + button);
+        }
+    };
+
     // Clear all text in the source textarea
     const handleCloseButtonClickRemoveText = () => {
         setSourceText("");
+        setInput("");
+        setTranslatedText("");
     };
 
     // Copy text handler
@@ -49,6 +101,50 @@ export function TextAreaGrid() {
         }
     };
 
+    // speaking the text and typing the sourcetext
+    const handleVoiceInput = () => {
+        const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            toast.error("Your browser does not support speech recognition.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = sourceLanguage || "en-US"; // Set the language
+        recognition.interimResults = false; // We only want final results
+
+        recognition.onstart = () => {
+            toast("Listening...");
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setSourceText(transcript); // Set recognized text
+        };
+
+        recognition.onerror = (event) => {
+            toast.error("Error occurred: " + event.error);
+        };
+
+        recognition.start();
+    };
+
+    const handleShare = (platform) => {
+        const text = encodeURIComponent(translatedText); // Get translated text
+
+        if (!translatedText) {
+            toast.error("No translated text to share!");
+            return;
+        }
+
+        if (platform.link === "#") {
+            alert(`Feature not available for ${platform.name}`);
+        } else {
+            window.open(`${platform.link}${text}`, "_blank");
+        }
+    };
+
     return (
         <>
             <div className="max-w-7xl grid gap-3 sm:grid-cols-2 grid-cols-1 items-center">
@@ -66,8 +162,11 @@ export function TextAreaGrid() {
                     )}
 
                     <textarea
-                        value={sourceText}
-                        onChange={(e) => setSourceText(e.target.value)}
+                        value={input}
+                        onChange={(e) => {
+                            setInput(e.target.value);
+                            setSourceText(e.target.value);
+                        }}
                         onInput={handleTextareaResize}
                         className="w-full text-base focus:outline-none no-scrollbar"
                         rows="3"
@@ -85,13 +184,19 @@ export function TextAreaGrid() {
                     <div className="flex justify-between">
                         <span>
                             <ToolTip TitleToolTip="Translate by voice">
-                                <MdOutlineKeyboardVoice className="sm:text-xl text-lg" />
+                                <MdOutlineKeyboardVoice
+                                    className="sm:text-xl text-lg"
+                                    onClick={handleVoiceInput}
+                                />
                             </ToolTip>
 
                             {sourceText.length !== 0 ? (
                                 <span>
                                     <ToolTip TitleToolTip="Listen">
-                                        <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
+                                        <HiOutlineSpeakerWave
+                                            className="sm:text-xl text-lg"
+                                            onClick={() => handleSpeakerText("sourceText")}
+                                        />
                                     </ToolTip>
 
                                     <ToolTip
@@ -108,8 +213,10 @@ export function TextAreaGrid() {
 
                         <span className="flex items-center gap-2">
                             <span className="text-xs text-gray-600">{sourceText.length} / 5,000</span>
-                            <ToolTip TitleToolTip="Keyboard">
-                                <CiKeyboard className="sm:text-xl text-lg" />
+                            <ToolTip TitleToolTip="Keyboard" onClick={() => setShowKeyboard(!showKeyboard)}>
+                                <CiKeyboard
+                                    className="sm:text-xl text-lg"
+                                />
                             </ToolTip>
                         </span>
                     </div>
@@ -152,7 +259,10 @@ export function TextAreaGrid() {
                         <div className="flex justify-between">
                             <span>
                                 <ToolTip TitleToolTip="Listen">
-                                    <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
+                                    <HiOutlineSpeakerWave
+                                        className="sm:text-xl text-lg"
+                                        onClick={() => handleSpeakerText("translatedText")}
+                                    />
                                 </ToolTip>
                             </span>
 
@@ -168,9 +278,36 @@ export function TextAreaGrid() {
                                     <AiOutlineLike className="sm:text-xl text-lg" />
                                 </ToolTip>
 
-                                <ToolTip TitleToolTip="Share translation">
-                                    <PiShareNetwork className="sm:text-xl text-lg" />
-                                </ToolTip>
+                                <Drawer>
+                                    <DrawerTrigger asChild>
+                                        <ToolTip TitleToolTip="Share translation">
+                                            <PiShareNetwork
+                                                className="sm:text-xl text-lg"
+                                            />
+                                        </ToolTip>
+                                    </DrawerTrigger>
+                                    <DrawerContent className="max-w-xl w-full mx-auto sm:h-[300px] h-[250px] px-6 flex flex-col">
+                                        <DrawerHeader>
+                                            <DrawerTitle></DrawerTitle>
+                                        </DrawerHeader>
+
+                                        <div className="grid gap-4 grid-cols-3 overflow-y-auto px-2 no-scrollbar">
+                                            {shareOptions.map((platform, index) => (
+                                                <Button
+                                                    variant="secondary"
+                                                    className="flex flex-col items-center gap-2 border p-8"
+                                                    key={index}
+                                                    onClick={() => handleShare(platform)}
+                                                >
+                                                    {platform.icon}
+                                                    <Typography variant="caption">
+                                                        {platform.name}
+                                                    </Typography>
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </DrawerContent>
+                                </Drawer>
                             </span>
                         </div>
                     ) : (
@@ -180,6 +317,17 @@ export function TextAreaGrid() {
             </div>
             <FeedBackLink />
             <ManageDataHistory />
+
+            {showKeyboard && (
+                <div className='fixed w-full left-0 bottom-0'>
+                    <Keyboard
+                        onChange={handleKeyboardInput}
+                        onKeyPress={handleKeyPress}
+                        layoutName={layout}
+                    />
+                </div>
+            )}
+
         </>
     );
 }
