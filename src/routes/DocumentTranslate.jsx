@@ -3,7 +3,6 @@ import { useDropzone } from "react-dropzone";
 import Container from "../components/ui/Container";
 import { FeedBackLink } from "../components/ui/FeedBackLink";
 import ManageDataHistory from "../components/ui/DataHistory";
-import UploadFileIcon from "@mui/icons-material/UploadFile"; // Icon for drag-and-drop cloud
 import { Button } from "../components/ui/button";
 import { Box, Typography } from "@mui/material";
 import { FaFile } from "react-icons/fa";
@@ -107,7 +106,6 @@ function DocumentUpload() {
                 </div> */}
 
               </Box>
-
             </div>
           </Box>
         ) : (
@@ -115,12 +113,13 @@ function DocumentUpload() {
             {/* Drag and Drop Document Box */}
             <div
               {...getRootProps()}
-              className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center border-2 border-dashed ${isDragActive ? "border-blue-500" : "border-gray-300"
-                } rounded-lg bg-gray-50 hover:cursor-pointer`}
+              className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center`}
             >
               <input {...getInputProps()} />
-              <UploadFileIcon fontSize="large" color="primary" />
-              <p className="mt-4 text-2xl font-medium">Drag and drop Doc.</p>
+              <img src="/drag_and_drop.png" className="h-28" />
+              <Typography variant="h6" marginTop="10px">
+                Drag and drop Doc.
+              </Typography>
             </div>
 
             {/* File Selection Options */}

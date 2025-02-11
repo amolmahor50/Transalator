@@ -7,6 +7,7 @@ import ContentPasteIcon from "@mui/icons-material/ContentPaste"; // Icon for "Pa
 import UploadFileIcon from "@mui/icons-material/UploadFile"; // Icon for drag-and-drop cloud
 import { Button } from "../components/ui/button";
 import { Link } from 'react-router-dom';
+import { Typography } from '@mui/material';
 
 function ImageUploader() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -39,12 +40,13 @@ function ImageUploader() {
         {!selectedImage && (
           <div
             {...getRootProps()}
-            className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center border-2 border-dashed ${isDragActive ? "border-blue-500" : "border-gray-300"
-              } rounded-lg bg-gray-50 hover:cursor-pointer`}
+            className={`col-span-6 my-8 p-6 sm:m-16 flex flex-col items-center justify-center`}
           >
             <input {...getInputProps()} />
-            <UploadFileIcon fontSize="large" color="primary" />
-            <p className="mt-4 text-2xl font-medium">Drag and drop file</p>
+            <img src="/drag_and_drop.png" className="h-28" />
+            <Typography variant="h6" marginTop="10px">
+              Drag and drop File.
+            </Typography>
           </div>
         )}
 
