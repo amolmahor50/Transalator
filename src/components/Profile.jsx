@@ -16,8 +16,6 @@ import { saveUserProfile } from "./Authentication/auth";
 export default function Profile() {
     const { user, setUser } = useContext(TranslateContextData);
 
-    console.log("user", user);
-
     // State for form inputs & validation errors
     const [formData, setFormData] = useState({
         firstName: user?.firstName || "",
@@ -42,12 +40,6 @@ export default function Profile() {
                     if (userDoc.exists()) {
                         setFormData((prev) => ({ ...prev, ...userDoc.data() }));
                         saveUserProfile(user, userDoc.data());
-                    } else {
-                        toast.info("No user data found!", {
-                            action: {
-                                label: "Close",
-                            },
-                        });
                     }
                 } catch (error) {
                     toast.error(`Error fetching user data:${error}`, {
