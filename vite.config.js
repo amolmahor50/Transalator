@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  base: 'https://amolmahor50.github.io/Translator',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

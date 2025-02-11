@@ -1,17 +1,17 @@
-// firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, deleteUser,reauthenticateWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, deleteUser, reauthenticateWithPopup } from "firebase/auth";
 import { getDatabase, ref, push, set, get, remove, child } from "firebase/database";
 import { doc, getDoc, setDoc, getFirestore, deleteDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAmLf0YTdGYMGz0TxoucBUgymKj5FgLkeU",
-  authDomain: "translator-a0afd.firebaseapp.com",
-  projectId: "translator-a0afd",
-  storageBucket: "translator-a0afd.firebasestorage.app",
-  messagingSenderId: "137183019852",
-  appId: "1:137183019852:web:0c79f04919a508d0f885e9",
-  measurementId: "G-JJNMN1H752"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -24,7 +24,8 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-export { app, db, firebaseStore, auth, ref, push, set, get, remove,
-   child, googleProvider, facebookProvider,deleteDoc, deleteUser,
-    onAuthStateChanged, doc, getDoc, setDoc,reauthenticateWithPopup
-   };
+export { 
+  app, db, firebaseStore, auth, ref, push, set, get, remove, child, 
+  googleProvider, facebookProvider, deleteDoc, deleteUser, onAuthStateChanged, 
+  doc, getDoc, setDoc, reauthenticateWithPopup 
+};
