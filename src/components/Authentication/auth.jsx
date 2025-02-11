@@ -15,7 +15,7 @@ export const saveUserProfile = (user, additionalInfo) => {
         email: user?.email,
         firstName: additionalInfo?.firstName || user?.displayName?.split(" ")[0] || "",
         lastName: additionalInfo?.lastName || user?.displayName?.split(" ")[1] || "",
-        photo: additionalInfo?.photo || user?.photoURL || "", // Ensure photoURL is saved
+        photo: additionalInfo?.photo || user?.photoURL || "",
         mobile: additionalInfo?.mobile || "",
         address: additionalInfo?.address || "",
         gender: additionalInfo?.gender || "",

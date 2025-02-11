@@ -62,9 +62,9 @@ function Navbar() {
                 <Avatar
                   alt={user?.firstName}
                   src={user?.photo || user?.photoURL}
-                  className="w-8 h-8 rounded-full"
+                  className="w-4 h-4 rounded-full"
                 >
-                  {user?.firstName?.slice(0, 1).toUpperCase()}
+                  {!user?.photo && user?.firstName?.slice(0, 1).toUpperCase()}
                 </Avatar>
               </ToolTip>
             </Button>
@@ -75,7 +75,7 @@ function Navbar() {
                 alt={user?.firstName}
                 src={user?.photo || user?.photoURL}
               >
-                {user?.firstName?.slice(0, 1).toUpperCase()}
+                {!user?.photo && user?.firstName?.slice(0, 1).toUpperCase()}
               </Avatar>
 
               <div className='flex flex-col mb-2'>

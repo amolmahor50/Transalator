@@ -80,11 +80,13 @@ export function SavedData() {
         setFilteredData(data);
     }, [AllSavedData, sortStatus, searchQuery]);
 
+    // speaker the saved text
     const handleSpeaker = (type, textType) => {
         setSourceText(textType);
         handleSpeakerText(type);
     };
 
+    // handle selected savedData deleted
     const handleDelete = async (id) => {
         try {
             const itemRef = ref(db, `users/${user.uid}/translationsData/savedData/${id}`); // Reference to the specific item
@@ -133,6 +135,7 @@ export function SavedData() {
         }
     };
 
+    // show the saved text data
     const handleCardClick = (type) => {
         // Set the clicked card data to the respective states
         setSourceText(type.sourceText);

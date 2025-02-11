@@ -104,7 +104,6 @@ export default function Profile() {
             }, { merge: true });
             setUser(formData);
             saveUserProfile(user, formData);
-            console.log(formData)
             toast.success("Profile Updated Successfully!", {
                 action: {
                     label: "Close",
@@ -135,7 +134,7 @@ export default function Profile() {
                             src={formData?.photo}
                             sx={{ width: 85, height: 85 }}
                         >
-                            {user?.firstName?.slice(0, 1).toUpperCase()}
+                            {!user?.photo && formData?.firstName?.slice(0, 1).toUpperCase()}
                         </Avatar>
                         <div className="flex flex-col gap-1">
                             <span className="text-xl font-semibold">Profile Picture</span>
