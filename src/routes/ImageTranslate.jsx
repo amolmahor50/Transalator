@@ -7,34 +7,75 @@ import { FaRegCopy } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { HiOutlineDownload } from "react-icons/hi";
 import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 import { Link } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import ToolTip from "../components/ui/ToolTip";
 import Switch from '@mui/material/Switch';
 import { TranslateContextData } from "../context/TranslateContext";
-
-const label = { inputProps: { 'aria-label': 'Size switch demo' } };
-console.log(label)
+import Tesseract from "tesseract.js";
+import { toast } from "sonner";
 
 export const ImagePreviewCard = ({ selectedImage, setSelectedImage }) => {
+
+  // Extract text and copy it immediately
+  const extractTextAndCopy = async () => {
+    if (!selectedImage) return;
+    try {
+      const { data } = await Tesseract.recognize(
+        URL.createObjectURL(selectedImage),
+        "eng",
+      );
+      navigator.clipboard.writeText(data.text);
+      toast.success("copied to clipboard!");
+    } catch (error) {
+      console.error("Error extracting text:", error);
+      toast.error("Failed to extract text.");
+    }
+  };
+
+  const downloadImage = () => {
+    if (!selectedImage) return;
+    const url = URL.createObjectURL(selectedImage);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = selectedImage.name || "downloaded-image.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       {/* Header Section */}
       <div className="flex justify-between items-center w-full py-1 bg-white border-b px-2 sm:border-t-none border-t">
         <Typography variant="body2" fontWeight="semibold" color="gray" className="flex items-center gap-0 sm:gap-2">
           Show original
-          <Switch {...label} defaultChecked size="small" />
+          <Switch defaultChecked size="small" />
         </Typography>
 
         <div className="flex items-center sm:gap-4">
           <div className="px-4 py-2 cursor-pointer rounded-sm hover:bg-accent">
-            <Typography variant="body2" fontWeight="semibold" color="gray" className="flex items-center gap-2">
+            <Typography
+              variant="body2"
+              fontWeight="semibold"
+              color="gray"
+              className="flex items-center gap-2"
+              onClick={extractTextAndCopy}
+            >
               <FaRegCopy size={20} />
               <span className="sm:flex hidden">Copy Text</span>
             </Typography>
           </div>
           <div className="px-4 py-2 cursor-pointer rounded-sm hover:bg-accent">
-            <Typography variant="body2" fontWeight="semibold" color="gray" className="flex items-center gap-2">
+            <Typography
+              variant="body2"
+              fontWeight="semibold"
+              color="gray"
+              className="flex items-center gap-2"
+              onClick={downloadImage}
+            >
               <HiOutlineDownload size={20} />
               <span className="sm:flex hidden">Download</span>
             </Typography>
@@ -68,7 +109,7 @@ export const ImagePreviewCard = ({ selectedImage, setSelectedImage }) => {
 };
 
 export default function ImageUploader() {
-  const { sourceText, setSourceText, translatedText, setTranslatedText, sourceLanguage, targetLanguage } = useContext(TranslateContextData);
+  const { sourceLanguage, targetLanguage } = useContext(TranslateContextData);
   const [selectedImage, setSelectedImage] = useState(null);
 
   // Handle file drop functionality using react-dropzone
@@ -126,13 +167,18 @@ export default function ImageUploader() {
 
             {/* Browse Files Button */}
             <Button variant="blue" className='px-20 mt-4'>
-              <input
-                type="file"
-                accept=".jpeg,.jpg,.png"
-                hidden
-                onChange={(e) => setSelectedImage(e.target.files[0])}
-              />
-              Browse your files
+              <label htmlFor="imageUpload">
+                <Input
+                  id="imageUpload"
+                  type="file"
+                  className="hidden"
+                  accept=".jpeg,.jpg,.png"
+                  onChange={(e) => {
+                    setSelectedImage(e.target.files[0]);
+                  }}
+                />
+                <span>Browse your files</span>
+              </label>
             </Button>
 
             {/* Paste from Clipboard Button */}
