@@ -58,7 +58,7 @@ function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size={10} className="border-none outline-none focus:outline-none rounded-full">
-              <ToolTip TitleToolTip="Google Account">
+              <ToolTip TitleToolTip="Google Account" size="10">
                 <Avatar
                   alt={user?.firstName}
                   src={user?.photo || user?.photoURL}

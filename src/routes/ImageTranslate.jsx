@@ -120,19 +120,30 @@ export default function ImageUploader() {
     onDrop: (acceptedFiles) => {
       setSelectedImage(acceptedFiles[0]);
     },
+    noClick: true,
   });
 
   // Handle pasting images from the clipboard
-  const handleClipboardPaste = (e) => {
-    navigator.clipboard.read().then((clipboardItems) => {
+
+  // Handle pasting images from the clipboard
+  const handleClipboardPaste = async () => {
+    try {
+      const clipboardItems = await navigator.clipboard.read();
       for (const item of clipboardItems) {
-        if (item.types.includes("image/png") || item.types.includes("image/jpeg")) {
-          item.getType(item.types[0]).then((blob) => setSelectedImage(blob));
+        if (item.types.includes("image/png") || item.types.includes("image/jpeg") || item.types.includes("image/jpg")) {
+          const blob = await item.getType(item.types[0]);
+          const file = new File([blob], "pasted-image.png", { type: blob.type });
+          setSelectedImage(file);
+          toast.success("Image pasted successfully!");
+          return;
         }
       }
-    });
+      toast.error("No image found in clipboard.");
+    } catch (error) {
+      console.error("Error pasting image:", error);
+      toast.error("Failed to paste image.");
+    }
   };
-
   return (
     <>
       <Box className='h-auto sm:border-2 border-b sm:rounded-lg grid sm:grid-cols-2 grid-cols-1'>

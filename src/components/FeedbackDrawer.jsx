@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { db, push, ref } from "../lib/firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { TranslateContextData } from "../context/TranslateContext";
+import { Link } from "react-router-dom";
 
 export default function FeedbackSidebar() {
     const { openSlider, setOpenSlider, loading, setLoading } = useContext(TranslateContextData);
@@ -153,7 +154,10 @@ export default function FeedbackSidebar() {
                             <Typography variant="body2">We may email you for more information or updates</Typography>
                         </Stack>
                         <Typography variant="caption">
-                            Some account and system information may be sent to Google. We will use it to fix problems and improve our services, subject to our Privacy Policy and Terms of Service. We may email you for more information or updates.
+                            Some account and system information may be sent to Google. We will use it to fix problems and improve our services, subject to our
+                            <Link to="https://policies.google.com/privacy?hl=en" className="text-blue-800"> Privacy Policy </Link>
+                            and <Link to="https://policies.google.com/terms?hl=en" className="text-blue-800"> Terms of Service </Link>
+                            We may email you for more information or updates. Go to <Link to="https://support.google.com/legal/answer/3110420?hl=en&authuser=0" className="text-blue-800"> Legal Help </Link> to ask for content changes for legal reasons.
                         </Typography>
                     </Stack>
                 </Stack>

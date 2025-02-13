@@ -8,8 +8,6 @@ import { Box, Typography } from "@mui/material";
 import { FaFile } from "react-icons/fa";
 import { IoCloseOutline } from "react-icons/io5";
 import ToolTip from "../components/ui/ToolTip";
-// import LoadingButton from '@mui/lab/LoadingButton';
-import { SaveIcon } from "lucide-react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { IoOpenOutline } from "react-icons/io5";
 import { TranslateContextData } from "../context/TranslateContext";
@@ -36,6 +34,7 @@ function DocumentUpload() {
         setUploadError("Invalid file type. Please upload a supported document.");
       }
     },
+    noClick: true,
   });
 
   // Handle document selection via the "Browse your files" button
@@ -54,9 +53,36 @@ function DocumentUpload() {
   };
 
   // Function to convert file size to MB
-  const getFileSizeInMB = (sizeInBytes) => {
-    return (sizeInBytes / (1024 * 1024)).toFixed(2); // Convert bytes to MB and keep two decimal places
+  const getFileSize = (sizeInBytes) => {
+    if (sizeInBytes < 1024 * 1024) {
+      return (sizeInBytes / 1024).toFixed(2) + " KB";
+    } else {
+      return (sizeInBytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
   };
+
+  // view the uploaded document
+  const handleOpenTranslation = () => {
+    if (uploadedDocument) {
+      const fileURL = URL.createObjectURL(uploadedDocument);
+      window.open(fileURL, "_blank"); // Open in a new tab
+    }
+  };
+
+  // uploaded document download 
+  const handleDownloadTranslation = () => {
+    if (uploadedDocument) {
+      const fileURL = URL.createObjectURL(uploadedDocument);
+      const a = document.createElement("a");
+      a.href = fileURL;
+      a.download = uploadedDocument.name; // Set file name for download
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(fileURL); // Clean up the URL
+    }
+  };
+
 
   return (
     <>
@@ -67,7 +93,7 @@ function DocumentUpload() {
 
             <div className="flex gap-3 sm:items-end flex-col sm:justify-end items-center">
 
-              <Box className='flex rounded-lg sm:gap-64 w-[280px] sm:w-fit bg-[#eeeeee] max-w-7xl sm:p-2 p-1 justify-between items-center'>
+              <Box className='flex rounded-lg sm:gap-64 w-[300px] sm:w-fit bg-[#eeeeee] max-w-7xl sm:p-2 p-1 justify-between items-center'>
                 <div className="flex items-center gap-1">
                   <ToolTip>
                     <FaFile className="sm:text-3xl text-2xl" />
@@ -77,7 +103,7 @@ function DocumentUpload() {
                       {uploadedDocument.name}
                     </Typography>
                     <Typography variant="caption" color="gray">
-                      {getFileSizeInMB(uploadedDocument.size)} MB
+                      {getFileSize(uploadedDocument.size)}
                     </Typography>
                   </div>
                 </div>
@@ -86,24 +112,22 @@ function DocumentUpload() {
                 </ToolTip>
               </Box>
 
-              <Box>
+              <Box className="flex flex-col gap-4">
                 <Button variant="blue">
                   Translate
                 </Button>
 
-                {/* <div className="flex sm:flex-row flex-col gap-4">
-                  <Button variant="outline"
-                    className='px-3 text-blue-800'
-                  >
+                <div className="flex sm:flex-row flex-col gap-4">
+                  <Button variant="outline" className='px-3 text-blue-800' onClick={handleDownloadTranslation} >
                     <AiOutlineDownload />
                     Download translation
                   </Button>
 
-                  <Button variant="blue">
+                  <Button variant="blue" onClick={handleOpenTranslation}>
                     <IoOpenOutline />
                     Open translation
                   </Button>
-                </div> */}
+                </div>
 
               </Box>
             </div>

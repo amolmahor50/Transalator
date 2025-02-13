@@ -1,4 +1,4 @@
-import { StrictMode, useContext, useEffect, useState } from "react";
+import React, { StrictMode, useContext, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import { TranslateContextData, TranslateProvider } from "./context/TranslateContext.jsx";

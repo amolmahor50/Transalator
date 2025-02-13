@@ -1,16 +1,16 @@
 {
   "name": "translator",
-  "homepage": "https://amolmahor50.github.io/Translator",
+  "homepage": "https://amolmahor50.github.io/translator/",
   "private": true,
   "version": "1.0.1",
   "type": "module",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
