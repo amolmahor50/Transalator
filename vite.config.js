@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ["@radix-ui/react-tabs"]
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

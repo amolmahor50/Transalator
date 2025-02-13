@@ -10,7 +10,6 @@ import { FaRegCopy } from "react-icons/fa6";
 import { PiShareNetwork } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
 import { Rating, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
 import { FeedBackLink } from "./ui/FeedBackLink";
 import { TranslateContextData } from "../context/TranslateContext";
 import { toast } from "sonner";
@@ -25,6 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { FaWhatsapp, FaFacebook, FaInstagram, FaTelegram, FaTwitter, FaGithub, FaGoogleDrive } from "react-icons/fa";
 import { IoBluetooth, IoPrint, IoMail } from "react-icons/io5";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const shareOptions = [
     { name: "WhatsApp", icon: <FaWhatsapp className="text-green-500 text-3xl" />, link: "https://wa.me/?text=" },
@@ -45,6 +46,28 @@ export function TextAreaGrid() {
     const [showKeyboard, setShowKeyboard] = useState(false);
     const [input, setInput] = useState(""); // State for input field
     const [layout, setLayout] = useState("default");
+    const [dictionaryData, setDictionaryData] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const fetchDictionaryData = async (word) => {
+        if (!word) return toast.error("Please enter a word!");
+
+        try {
+            const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            const data = await response.json();
+
+            if (data.title) {
+                toast.error("Word not found in dictionary.");
+                return;
+            }
+
+            setDictionaryData(data[0]); // Storing the first result
+            setIsOpen(true);
+            console.log("dictionaryData", dictionaryData)
+        } catch (error) {
+            toast.error("Failed to fetch dictionary data.");
+        }
+    };
 
     const handleTextareaResize = (e) => {
         const textarea = e.target;
@@ -150,10 +173,11 @@ export function TextAreaGrid() {
             <div className="max-w-7xl grid gap-3 sm:grid-cols-2 grid-cols-1 items-center">
                 <div className="relative border-2 rounded-lg sm:p-4 p-2">
                     {sourceText.length !== 0 ? (
-                        <span
-                            className="absolute right-2 sm:right-3 top-0 sm:top-2"
-                        >
-                            <ToolTip TitleToolTip="Clear source Text" onClick={handleCloseButtonClickRemoveText}>
+                        <span className="absolute right-2 sm:right-3 top-0 sm:top-2"                        >
+                            <ToolTip
+                                TitleToolTip="Clear source Text"
+                                onClick={handleCloseButtonClickRemoveText}
+                            >
                                 <IoMdClose className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
@@ -174,29 +198,32 @@ export function TextAreaGrid() {
                     />
 
                     {sourceText.length !== 0 ? (
-                        <Link className="ml-1 text-blue-500 text-xs sm:text-sm italic">
+                        <span
+                            className="ml-1 text-blue-500 text-xs sm:text-sm italic cursor-pointer"
+                            onClick={() => fetchDictionaryData(sourceText)}
+                        >
                             Dictionary
-                        </Link>
+                        </span>
                     ) : (
                         ""
                     )}
 
                     <div className="flex justify-between">
                         <span>
-                            <ToolTip TitleToolTip="Translate by voice">
-                                <MdOutlineKeyboardVoice
-                                    className="sm:text-xl text-lg"
-                                    onClick={handleVoiceInput}
-                                />
+                            <ToolTip
+                                TitleToolTip="Translate by voice"
+                                onClick={handleVoiceInput}
+                            >
+                                <MdOutlineKeyboardVoice className="sm:text-xl text-lg" />
                             </ToolTip>
 
                             {sourceText.length !== 0 ? (
                                 <span>
-                                    <ToolTip TitleToolTip="Listen">
-                                        <HiOutlineSpeakerWave
-                                            className="sm:text-xl text-lg"
-                                            onClick={() => handleSpeakerText("sourceText")}
-                                        />
+                                    <ToolTip
+                                        TitleToolTip="Listen"
+                                        onClick={() => handleSpeakerText("sourceText")}
+                                    >
+                                        <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                                     </ToolTip>
 
                                     <ToolTip
@@ -214,9 +241,7 @@ export function TextAreaGrid() {
                         <span className="flex items-center gap-2">
                             <span className="text-xs text-gray-600">{sourceText.length} / 5,000</span>
                             <ToolTip TitleToolTip="Keyboard" onClick={() => setShowKeyboard(!showKeyboard)}>
-                                <CiKeyboard
-                                    className="sm:text-xl text-lg"
-                                />
+                                <CiKeyboard className="sm:text-xl text-lg" />
                             </ToolTip>
                         </span>
                     </div>
@@ -248,9 +273,12 @@ export function TextAreaGrid() {
                     />
 
                     {sourceText.length !== 0 ? (
-                        <Link className="ml-1 mb-2 text-blue-500 text-xs sm:text-sm italic">
+                        <span
+                            className="ml-1 mb-2 text-blue-500 text-xs sm:text-sm italic cursor-pointer"
+                            onClick={() => fetchDictionaryData(sourceText)}
+                        >
                             Dictionary
-                        </Link>
+                        </span>
                     ) : (
                         ""
                     )}
@@ -258,11 +286,11 @@ export function TextAreaGrid() {
                     {sourceText.length !== 0 ? (
                         <div className="flex justify-between">
                             <span>
-                                <ToolTip TitleToolTip="Listen">
-                                    <HiOutlineSpeakerWave
-                                        className="sm:text-xl text-lg"
-                                        onClick={() => handleSpeakerText("translatedText")}
-                                    />
+                                <ToolTip
+                                    TitleToolTip="Listen"
+                                    onClick={() => handleSpeakerText("translatedText")}
+                                >
+                                    <HiOutlineSpeakerWave className="sm:text-xl text-lg" />
                                 </ToolTip>
                             </span>
 
@@ -281,9 +309,7 @@ export function TextAreaGrid() {
                                 <Drawer>
                                     <DrawerTrigger asChild>
                                         <ToolTip TitleToolTip="Share translation">
-                                            <PiShareNetwork
-                                                className="sm:text-xl text-lg"
-                                            />
+                                            <PiShareNetwork className="sm:text-xl text-lg" />
                                         </ToolTip>
                                     </DrawerTrigger>
                                     <DrawerContent className="max-w-xl w-full mx-auto sm:h-[300px] h-[250px] px-6 flex flex-col">
@@ -327,6 +353,64 @@ export function TextAreaGrid() {
                     />
                 </div>
             )}
+
+            {/* Dictionary Dialog */}
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Dictionary</DialogTitle>
+                    </DialogHeader>
+
+                    {dictionaryData && (
+                        <Tabs defaultValue="definition">
+                            <TabsList>
+                                <TabsTrigger value="definition">Definition</TabsTrigger>
+                                <TabsTrigger value="synonyms">Synonyms</TabsTrigger>
+                                <TabsTrigger value="antonyms">Antonyms</TabsTrigger>
+                                <TabsTrigger value="examples">Examples</TabsTrigger>
+                            </TabsList>
+
+                            {/* Definition Tab */}
+                            <TabsContent value="definition">
+                                <p className="text-lg font-semibold">{dictionaryData.word}</p>
+                                {dictionaryData.meanings.map((meaning, index) => (
+                                    <div key={index} className="mt-2">
+                                        <p className="italic">{meaning.partOfSpeech}</p>
+                                        <p>{meaning.definitions[0].definition}</p>
+                                    </div>
+                                ))}
+                            </TabsContent>
+
+                            {/* Synonyms Tab */}
+                            <TabsContent value="synonyms">
+                                {dictionaryData.meanings.flatMap(m => m.synonyms).length > 0 ? (
+                                    <p>{dictionaryData.meanings.flatMap(m => m.synonyms).join(", ")}</p>
+                                ) : (
+                                    <p>No synonyms found.</p>
+                                )}
+                            </TabsContent>
+
+                            {/* Antonyms Tab */}
+                            <TabsContent value="antonyms">
+                                {dictionaryData.meanings.flatMap(m => m.antonyms).length > 0 ? (
+                                    <p>{dictionaryData.meanings.flatMap(m => m.antonyms).join(", ")}</p>
+                                ) : (
+                                    <p>No antonyms found.</p>
+                                )}
+                            </TabsContent>
+
+                            {/* Examples Tab */}
+                            <TabsContent value="examples">
+                                {dictionaryData.meanings.flatMap(m => m.definitions[0]?.example || []).length > 0 ? (
+                                    <p>{dictionaryData.meanings.flatMap(m => m.definitions[0]?.example).join("")}</p>
+                                ) : (
+                                    <p>No examples found.</p>
+                                )}
+                            </TabsContent>
+                        </Tabs>
+                    )}
+                </DialogContent>
+            </Dialog>
 
         </>
     );
